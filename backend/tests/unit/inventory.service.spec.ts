@@ -75,14 +75,22 @@ describe("InventoryService", () => {
   describe("adjustStock", () => {
     it("should update specific product stock", async () => {
       const mockInventory = {
-        update: jest.fn().mockResolvedValue({ quantity: 50 }),
+        quantity: 10,
+        increment: jest.fn().mockResolvedValue(undefined),
+        reload: jest.fn().mockResolvedValue({ quantity: 60 }),
       };
+      // After reload, quantity should be updated
+      mockInventory.reload.mockImplementation(async () => {
+        mockInventory.quantity = 60;
+        return mockInventory;
+      });
       jest.spyOn(Inventory, "findByPk").mockResolvedValue(mockInventory as any);
 
       const result = await service.addStock(1, 50);
 
-      expect(mockInventory.update).toHaveBeenCalledWith({ quantity: 50 });
-      expect(result.quantity).toBe(50);
+      expect(mockInventory.increment).toHaveBeenCalledWith("quantity", { by: 50 });
+      expect(mockInventory.reload).toHaveBeenCalled();
+      expect(result.quantity).toBe(60);
     });
 
     it("should throw error if inventory record missing", async () => {

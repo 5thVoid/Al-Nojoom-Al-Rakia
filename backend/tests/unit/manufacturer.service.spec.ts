@@ -10,24 +10,32 @@ describe("ManufacturerService (BaseService)", () => {
   });
 
   describe("getAll", () => {
-    it("should return an array of manufacturers", async () => {
+    it("should return paginated manufacturers", async () => {
       // 1. Setup Mock Data
-      const mockData = [
+      const mockRows = [
         { id: 1, name: "Asus" },
         { id: 2, name: "MSI" },
       ];
 
-      // 2. Spy on the Model
-      const findAllSpy = jest
-        .spyOn(Manufacturer, "findAll")
-        .mockResolvedValue(mockData as any);
+      // 2. Spy on the Model (BaseService uses findAndCountAll for pagination)
+      const findAndCountAllSpy = jest
+        .spyOn(Manufacturer, "findAndCountAll")
+        .mockResolvedValue({ rows: mockRows, count: 2 } as any);
 
       // 3. Execute
       const result = await service.getAll();
 
       // 4. Assert
-      expect(findAllSpy).toHaveBeenCalled();
-      expect(result).toEqual(mockData);
+      expect(findAndCountAllSpy).toHaveBeenCalled();
+      expect(result).toEqual({
+        data: mockRows,
+        meta: {
+          totalItems: 2,
+          itemsPerPage: 10,
+          totalPages: 1,
+          currentPage: 1,
+        },
+      });
     });
   });
 
