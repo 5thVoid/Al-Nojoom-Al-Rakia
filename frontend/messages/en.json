@@ -1,0 +1,56 @@
+{
+    "Navbar": {
+        "home": "Home",
+        "products": "Products",
+        "categories": "Categories",
+        "search": "Search",
+        "cart": "Cart",
+        "login": "Log in",
+        "signup": "Sign up",
+        "searchPlaceholder": "Search products, categories...",
+        "noResults": "No results found.",
+        "suggestions": "Suggestions",
+        "newArrivals": "New Arrivals",
+        "bestSellers": "Best Sellers",
+        "electronics": "Electronics"
+    },
+    "Cart": {
+        "title": "My Cart",
+        "total": "Total",
+        "checkout": "Checkout",
+        "continueShopping": "Continue Shopping",
+        "emptyTitle": "Your cart is empty",
+        "startShopping": "Start Shopping",
+        "remove": "Remove"
+    },
+    "Footer": {
+        "companyName": "Nojoom Al Raqia for Trading Co.",
+        "description": "Sales Computer & Accessories - Cabinet - Network",
+        "contact": "Contact",
+        "legal": "Legal",
+        "cr": "C.R: 1010231920",
+        "cc": "C.C.No: 180634",
+        "address": "Olaya - Al-khaleej Computer Group",
+        "pobox": "P.O.Box: 6331 Unit No. 5 - Riyadh : 12211 - 3636",
+        "contacts": "Tel: 0502780097 - Fax: 4626724",
+        "vat": "VAT NO: 312243879200003",
+        "rights": "All rights reserved © 2025 Al-Nojoom Al-Rakia"
+    },
+    "Auth": {
+        "loginTitle": "Welcome back",
+        "loginDescription": "Enter your email to sign in to your account",
+        "signupTitle": "Create an account",
+        "signupDescription": "Enter your email below to create your account",
+        "email": "Email",
+        "password": "Password",
+        "role": "Role",
+        "customer": "Customer",
+        "admin": "Admin",
+        "login": "Sign In",
+        "signup": "Sign Up",
+        "noAccount": "Don't have an account?",
+        "hasAccount": "Already have an account?",
+        "emailPlaceholder": "m@example.com",
+        "selectRole": "Select a role"
+    }
+}
