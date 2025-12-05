@@ -22,6 +22,18 @@ interface Product {
     quantity: number
     stockLabel: string
     isPurchasable: boolean
+    manufacturer?: {
+        id: number
+        name: string
+    }
+    category?: {
+        id: number
+        name: string
+    }
+    productType?: {
+        id: number
+        name: string
+    }
 }
 
 interface ProductsResponse {
@@ -106,7 +118,7 @@ export function FeaturedProducts() {
     }
 
     return (
-        <section className="bg-muted/30 px-28">
+        <section className="bg-muted/10 px-28">
             <div className="container max-w-screen-2xl">
                 <h2 className="text-3xl font-bold tracking-tight text-center my-12 text-foreground ml-3">
                     {t('title')}
@@ -133,7 +145,7 @@ export function FeaturedProducts() {
                 >
                     {products.map((product) => (
                         <SwiperSlide key={product.id} className="mb-12">
-                            <Card className="h-full flex flex-col hover:shadow-lg transition-shadow">
+                            <Card className="h-full flex flex-col hover:shadow-lg transition-shadow duration-500">
                                 <CardHeader>
                                     <div className="flex items-start justify-between gap-2">
                                         <CardTitle className="text-lg line-clamp-2">
@@ -152,6 +164,29 @@ export function FeaturedProducts() {
                                     <div className="text-2xl font-bold text-primary">
                                         ${product.price}
                                     </div>
+
+                                    {/* Product metadata */}
+                                    <div className="mt-3 space-y-1 text-xs text-muted-foreground">
+                                        {product.manufacturer && (
+                                            <div className="flex items-center gap-1">
+                                                <span>Manufacturer : </span>
+                                                <span className="font-semibold">{product.manufacturer.name}</span>
+                                            </div>
+                                        )}
+                                        {product.category && (
+                                            <div className="flex items-center gap-1">
+                                                <span>Category : </span>
+                                                <span className="font-semibold">{product.category.name}</span>
+                                            </div>
+                                        )}
+                                        {product.productType && (
+                                            <div className="flex items-center gap-1">
+                                                <span>Product Type : </span>
+                                                <span className="font-semibold">{product.productType.name}</span>
+                                            </div>
+                                        )}
+                                    </div>
+
                                     {product.quantity > 0 && product.quantity <= 5 && (
                                         <CardDescription className="mt-2">
                                             {t('onlyLeft', { count: product.quantity })}

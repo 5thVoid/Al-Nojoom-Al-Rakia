@@ -12,7 +12,11 @@
         "suggestions": "اقتراحات",
         "newArrivals": "وصل حديثاً",
         "bestSellers": "الأكثر مبيعاً",
-        "electronics": "إلكترونيات"
+        "electronics": "إلكترونيات",
+        "searching": "جاري البحث",
+        "typeToSearch": "اكتب حرفين على الأقل للبحث",
+        "viewAllResults": "عرض جميع النتائج",
+        "pages": "الصفحات"
     },
     "Cart": {
         "title": "عربة التسوق",
@@ -90,7 +94,8 @@
         "showing": "عرض {count} منتج",
         "noProducts": "لا توجد منتجات",
         "showFilters": "إظهار الفلاتر",
-        "hideFilters": "إخفاء الفلاتر"
+        "hideFilters": "إخفاء الفلاتر",
+        "inStockOnly": "المتوفر فقط"
     },
     "ProductPage": {
         "back": "العودة للمنتجات",
@@ -104,5 +109,57 @@
         "categoryId": "معرف التصنيف",
         "productType": "نوع المنتج",
         "typeId": "معرف النوع"
+    },
+    "Search": {
+        "title": "نتائج البحث",
+        "resultsFor": "نتائج البحث عن \"{query}\"",
+        "noResults": "لا توجد منتجات مطابقة لبحثك",
+        "back": "رجوع"
+    },
+    "Checkout": {
+        "title": "إتمام الشراء",
+        "steps": {
+            "shipping": "الشحن",
+            "payment": "الدفع",
+            "review": "المراجعة"
+        },
+        "shipping": {
+            "title": "عنوان الشحن",
+            "firstName": "الاسم الأول",
+            "lastName": "اسم العائلة",
+            "email": "البريد الإلكتروني",
+            "phone": "رقم الهاتف",
+            "address": "العنوان",
+            "city": "المدينة",
+            "state": "المنطقة/المحافظة",
+            "zipCode": "الرمز البريدي",
+            "country": "الدولة",
+            "continue": "متابعة للدفع"
+        },
+        "payment": {
+            "title": "تفاصيل الدفع",
+            "cardNumber": "رقم البطاقة",
+            "cardHolder": "اسم حامل البطاقة",
+            "expiry": "تاريخ الانتهاء",
+            "cvv": "رمز التحقق",
+            "back": "رجوع",
+            "continue": "متابعة للمراجعة"
+        },
+        "review": {
+            "title": "مراجعة طلبك",
+            "shippingAddress": "عنوان الشحن",
+            "paymentMethod": "طريقة الدفع",
+            "expires": "ينتهي في",
+            "back": "رجوع",
+            "placeOrder": "تأكيد الطلب"
+        },
+        "summary": {
+            "title": "ملخص الطلب",
+            "subtotal": "المجموع الفرعي",
+            "shipping": "الشحن",
+            "free": "مجاني",
+            "tax": "الضريبة",
+            "total": "الإجمالي"
+        }
     }
 }

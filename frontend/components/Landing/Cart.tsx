@@ -156,8 +156,8 @@ export function Cart() {
     }
 
     const handleCheckout = () => {
-        // TODO: Implement checkout flow
-        toast.info('Checkout coming soon!')
+        setIsOpen(false)
+        router.push('/checkout')
     }
 
     const items = cartData?.items || []

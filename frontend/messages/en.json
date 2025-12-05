@@ -12,7 +12,11 @@
         "suggestions": "Suggestions",
         "newArrivals": "New Arrivals",
         "bestSellers": "Best Sellers",
-        "electronics": "Electronics"
+        "electronics": "Electronics",
+        "searching": "Searching",
+        "typeToSearch": "Type at least 2 characters to search",
+        "viewAllResults": "View all results",
+        "pages": "Pages"
     },
     "Cart": {
         "title": "My Cart",
@@ -90,7 +94,8 @@
         "showing": "Showing {count} products",
         "noProducts": "No products found",
         "showFilters": "Show Filters",
-        "hideFilters": "Hide Filters"
+        "hideFilters": "Hide Filters",
+        "inStockOnly": "In Stock Only"
     },
     "ProductPage": {
         "back": "Back to Products",
@@ -104,5 +109,57 @@
         "categoryId": "Category ID",
         "productType": "Product Type",
         "typeId": "Type ID"
+    },
+    "Search": {
+        "title": "Search Results",
+        "resultsFor": "Results for \"{query}\"",
+        "noResults": "No products found matching your search",
+        "back": "Back"
+    },
+    "Checkout": {
+        "title": "Checkout",
+        "steps": {
+            "shipping": "Shipping",
+            "payment": "Payment",
+            "review": "Review"
+        },
+        "shipping": {
+            "title": "Shipping Address",
+            "firstName": "First Name",
+            "lastName": "Last Name",
+            "email": "Email",
+            "phone": "Phone",
+            "address": "Address",
+            "city": "City",
+            "state": "State/Province",
+            "zipCode": "ZIP/Postal Code",
+            "country": "Country",
+            "continue": "Continue to Payment"
+        },
+        "payment": {
+            "title": "Payment Details",
+            "cardNumber": "Card Number",
+            "cardHolder": "Card Holder Name",
+            "expiry": "Expiry Date",
+            "cvv": "CVV",
+            "back": "Back",
+            "continue": "Continue to Review"
+        },
+        "review": {
+            "title": "Review Your Order",
+            "shippingAddress": "Shipping Address",
+            "paymentMethod": "Payment Method",
+            "expires": "Expires",
+            "back": "Back",
+            "placeOrder": "Place Order"
+        },
+        "summary": {
+            "title": "Order Summary",
+            "subtotal": "Subtotal",
+            "shipping": "Shipping",
+            "free": "Free",
+            "tax": "Tax",
+            "total": "Total"
+        }
     }
 }

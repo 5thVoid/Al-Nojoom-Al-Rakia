@@ -29,6 +29,18 @@ interface Product {
     manufacturerId?: number
     categoryId?: number
     productTypeId?: number
+    manufacturer?: {
+        id: number
+        name: string
+    }
+    category?: {
+        id: number
+        name: string
+    }
+    productType?: {
+        id: number
+        name: string
+    }
 }
 
 interface Manufacturer {
@@ -69,35 +81,53 @@ export function AllProducts() {
     const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
     const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000])
     const [showFilters, setShowFilters] = useState(true)
+    const [inStockOnly, setInStockOnly] = useState(false)
 
     useEffect(() => {
         const fetchData = async () => {
+            setIsLoading(true);
             try {
-                const [productsRes, manufacturersRes, productTypesRes, categoriesRes] = await Promise.all([
-                    fetch('/api/products?page=1&limit=50'),
-                    fetch('/api/manufacturers?page=1&limit=50'),
-                    fetch('/api/productTypes'),
-                    fetch('/api/categories')
-                ])
+                // Build query parameters for products
+                const params = new URLSearchParams({
+                    page: '1',
+                    limit: '50',
+                });
 
-                const productsData = await productsRes.json()
-                const manufacturersData = await manufacturersRes.json()
-                const productTypesData = await productTypesRes.json()
-                const categoriesData = await categoriesRes.json()
+                if (selectedCategory) params.append('categoryId', selectedCategory.toString());
+                selectedManufacturers.forEach(id => params.append('manufacturerId', id.toString()));
+                selectedProductTypes.forEach(id => params.append('productTypeId', id.toString()));
+                if (inStockOnly) params.append('in_stock', 'true');
 
-                setProducts(productsData.data || [])
-                setManufacturers(manufacturersData.data || [])
-                setProductTypes(productTypesData.data || [])
-                setCategories(categoriesData || [])
+                // Fetch products with filters
+                const productsRes = await fetch(`/api/products?${params.toString()}`);
+                const productsData = await productsRes.json();
+                setProducts(productsData.data || []);
+
+                // Only fetch filter options on initial load
+                if (manufacturers.length === 0) {
+                    const [manufacturersRes, productTypesRes, categoriesRes] = await Promise.all([
+                        fetch('/api/manufacturers?page=1&limit=50'),
+                        fetch('/api/productTypes'),
+                        fetch('/api/categories')
+                    ]);
+
+                    const manufacturersData = await manufacturersRes.json();
+                    const productTypesData = await productTypesRes.json();
+                    const categoriesData = await categoriesRes.json();
+
+                    setManufacturers(manufacturersData.data || []);
+                    setProductTypes(productTypesData.data || []);
+                    setCategories(categoriesData || []);
+                }
             } catch (error) {
-                console.error('Failed to fetch data:', error)
+                console.error('Failed to fetch data:', error);
             } finally {
-                setIsLoading(false)
+                setIsLoading(false);
             }
-        }
+        };
 
-        fetchData()
-    }, [])
+        fetchData();
+    }, [selectedCategory, selectedManufacturers, selectedProductTypes, inStockOnly]);
 
     const toggleManufacturer = (id: number) => {
         setSelectedManufacturers(prev =>
@@ -116,54 +146,13 @@ export function AllProducts() {
         setSelectedProductTypes([])
         setSelectedCategory(null)
         setPriceRange([0, 5000])
+        setInStockOnly(false)
     }
 
-    // Helper function to get all category IDs including subcategories
-    const getAllCategoryIds = (categoryId: number): number[] => {
-        const ids: number[] = [categoryId]
-
-        const findSubcategories = (cats: Category[]) => {
-            for (const cat of cats) {
-                if (cat.id === categoryId && cat.subcategories) {
-                    const addSubIds = (subCats: Category[]) => {
-                        for (const subCat of subCats) {
-                            ids.push(subCat.id)
-                            if (subCat.subcategories) {
-                                addSubIds(subCat.subcategories)
-                            }
-                        }
-                    }
-                    addSubIds(cat.subcategories)
-                } else if (cat.subcategories) {
-                    findSubcategories(cat.subcategories)
-                }
-            }
-        }
-
-        findSubcategories(categories)
-        return ids
-    }
-
+    // Client-side price range filtering only (other filters are server-side via API)
     const filteredProducts = products.filter(product => {
         const price = parseFloat(product.price)
-        const inPriceRange = price >= priceRange[0] && price <= priceRange[1]
-
-        // Manufacturer filter
-        const matchesManufacturer = selectedManufacturers.length === 0 ||
-            (product.manufacturerId && selectedManufacturers.includes(product.manufacturerId))
-
-        // Product Type filter
-        const matchesProductType = selectedProductTypes.length === 0 ||
-            (product.productTypeId && selectedProductTypes.includes(product.productTypeId))
-
-        // Category filter (including subcategories)
-        let matchesCategory = true
-        if (selectedCategory !== null) {
-            const allowedCategoryIds = getAllCategoryIds(selectedCategory)
-            matchesCategory = product.categoryId ? allowedCategoryIds.includes(product.categoryId) : false
-        }
-
-        return inPriceRange && matchesManufacturer && matchesProductType && matchesCategory
+        return price >= priceRange[0] && price <= priceRange[1]
     })
 
     const renderCategories = (cats: Category[], level = 0) => {
@@ -267,7 +256,7 @@ export function AllProducts() {
                     {categories.map(cat => (
                         <SwiperSlide key={cat.id}>
                             <Card
-                                className={`cursor-pointer transition-all hover:shadow-lg ${selectedCategory === cat.id
+                                className={`cursor-pointer transition-all hover:shadow-lg duration-500 ${selectedCategory === cat.id
                                     ? 'border-primary bg-primary/5 shadow-md'
                                     : 'hover:border-primary/50'
                                     }`}
@@ -290,7 +279,7 @@ export function AllProducts() {
             <div className="flex flex-col md:flex-row gap-6">
                 {/* Filters Sidebar */}
                 <aside className={`${showFilters ? 'block' : 'hidden'} md:block w-full md:w-64 space-y-6`}>
-                    <Card>
+                    <Card className="my-9">
                         <CardHeader className="flex flex-row items-center justify-between">
                             <CardTitle className="text-lg">{t('filters')}</CardTitle>
                             <Button
@@ -363,6 +352,23 @@ export function AllProducts() {
                                     ))}
                                 </div>
                             </div>
+
+                            {/* In Stock Only */}
+                            <div className="space-y-3">
+                                <div className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id="in-stock-only"
+                                        checked={inStockOnly}
+                                        onCheckedChange={(checked) => setInStockOnly(checked as boolean)}
+                                    />
+                                    <Label
+                                        htmlFor="in-stock-only"
+                                        className="text-sm font-semibold cursor-pointer"
+                                    >
+                                        {t('inStockOnly')}
+                                    </Label>
+                                </div>
+                            </div>
                         </CardContent>
                     </Card>
                 </aside>
@@ -377,7 +383,7 @@ export function AllProducts() {
                         {filteredProducts.map(product => (
                             <Card
                                 key={product.id}
-                                className="flex flex-col hover:shadow-lg transition-shadow cursor-pointer"
+                                className="flex flex-col hover:shadow-lg transition-shadow cursor-pointer duration-500"
                                 onClick={() => router.push(`/products/${product.id}`)}
                             >
                                 <CardHeader>
@@ -398,6 +404,29 @@ export function AllProducts() {
                                     <div className="text-2xl font-bold text-primary">
                                         ${product.price}
                                     </div>
+
+                                    {/* Product metadata */}
+                                    <div className="mt-3 space-y-1 text-xs text-muted-foreground">
+                                        {product.manufacturer && (
+                                            <div className="flex items-center gap-1">
+                                                <span>Manufacturer : </span>
+                                                <span className="font-semibold">{product.manufacturer.name}</span>
+                                            </div>
+                                        )}
+                                        {product.category && (
+                                            <div className="flex items-center gap-1">
+                                                <span>Category : </span>
+                                                <span className="font-semibold">{product.category.name}</span>
+                                            </div>
+                                        )}
+                                        {product.productType && (
+                                            <div className="flex items-center gap-1">
+                                                <span>Product Type : </span>
+                                                <span className="font-semibold">{product.productType.name}</span>
+                                            </div>
+                                        )}
+                                    </div>
+
                                     {product.quantity > 0 && product.quantity <= 5 && (
                                         <CardDescription className="mt-2">
                                             {tProducts('onlyLeft', { count: product.quantity })}
