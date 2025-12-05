@@ -51,6 +51,46 @@
         "noAccount": "ليس لديك حساب؟",
         "hasAccount": "لديك حساب بالفعل؟",
         "emailPlaceholder": "m@example.com",
-        "selectRole": "اختر نوع الحساب"
+        "selectRole": "اختر نوع الحساب",
+        "signupSuccess": "مرحباً بك في المتجر! يتم التوجيه إلى تسجيل الدخول...",
+        "signupFailure": "فشل التسجيل",
+        "loginSuccess": "تسجيل الدخول ناجح",
+        "loginFailure": "فشل تسجيل الدخول"
+    },
+    "Products": {
+        "title": "المنتجات المميزة",
+        "inStock": "متوفر",
+        "lowStock": "كمية محدودة",
+        "outOfStock": "غير متوفر",
+        "preOrder": "طلب مسبق",
+        "addToCart": "أضف للسلة",
+        "unavailable": "غير متاح",
+        "onlyLeft": "فقط {count} متبقي!"
+    },
+    "AllProducts": {
+        "title": "جميع المنتجات",
+        "filters": "الفلاتر",
+        "clear": "مسح",
+        "categories": "التصنيفات",
+        "priceRange": "نطاق السعر",
+        "manufacturers": "الشركات المصنعة",
+        "productTypes": "أنواع المنتجات",
+        "showing": "عرض {count} منتج",
+        "noProducts": "لا توجد منتجات",
+        "showFilters": "إظهار الفلاتر",
+        "hideFilters": "إخفاء الفلاتر"
+    },
+    "ProductPage": {
+        "back": "العودة للمنتجات",
+        "notFound": "المنتج غير موجود",
+        "sku": "رقم المنتج",
+        "specifications": "المواصفات",
+        "productInfo": "معلومات المنتج",
+        "productId": "معرف المنتج",
+        "manufacturer": "الشركة المصنعة",
+        "category": "التصنيف",
+        "categoryId": "معرف التصنيف",
+        "productType": "نوع المنتج",
+        "typeId": "معرف النوع"
     }
 }

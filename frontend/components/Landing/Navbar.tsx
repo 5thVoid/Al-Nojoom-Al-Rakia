@@ -5,10 +5,11 @@ import { Link } from "@/i18n/navigation"
 import Image from "next/image"
 import { Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { SearchBar } from "@/components/SearchBar"
-import { Cart } from "@/components/Cart"
+import { SearchBar } from "@/components/Landing/SearchBar"
+import { Cart } from "@/components/Landing/Cart"
 import { useTranslations } from "next-intl"
 import { useAuth } from "@/context/AuthContext"
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher"
 
 export function Navbar() {
     const t = useTranslations('Navbar')
@@ -59,6 +60,8 @@ export function Navbar() {
                     <SearchBar />
 
                     <Cart />
+
+                    <LanguageSwitcher />
 
                     <div className="hidden items-center gap-2 md:flex ml-2">
                         {isAuthenticated ? (

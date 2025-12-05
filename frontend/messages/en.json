@@ -51,6 +51,46 @@
         "noAccount": "Don't have an account?",
         "hasAccount": "Already have an account?",
         "emailPlaceholder": "m@example.com",
-        "selectRole": "Select a role"
+        "selectRole": "Select a role",
+        "signupSuccess": "Welcome to the store! Redirecting to Login...",
+        "signupFailure": "Signup failed",
+        "loginSuccess": "Login successful",
+        "loginFailure": "Login failed"
+    },
+    "Products": {
+        "title": "Featured Products",
+        "inStock": "In Stock",
+        "lowStock": "Low Stock",
+        "outOfStock": "Out of Stock",
+        "preOrder": "Pre-Order",
+        "addToCart": "Add to Cart",
+        "unavailable": "Unavailable",
+        "onlyLeft": "Only {count} left!"
+    },
+    "AllProducts": {
+        "title": "All Products",
+        "filters": "Filters",
+        "clear": "Clear",
+        "categories": "Categories",
+        "priceRange": "Price Range",
+        "manufacturers": "Manufacturers",
+        "productTypes": "Product Types",
+        "showing": "Showing {count} products",
+        "noProducts": "No products found",
+        "showFilters": "Show Filters",
+        "hideFilters": "Hide Filters"
+    },
+    "ProductPage": {
+        "back": "Back to Products",
+        "notFound": "Product not found",
+        "sku": "SKU",
+        "specifications": "Specifications",
+        "productInfo": "Product Information",
+        "productId": "Product ID",
+        "manufacturer": "Manufacturer",
+        "category": "Category",
+        "categoryId": "Category ID",
+        "productType": "Product Type",
+        "typeId": "Type ID"
     }
 }

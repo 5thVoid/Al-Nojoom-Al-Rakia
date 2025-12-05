@@ -23,6 +23,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { toast } from "sonner"
 
 export default function SignupPage() {
     const t = useTranslations('Auth')
@@ -46,11 +47,11 @@ export default function SignupPage() {
                 body: JSON.stringify(formData),
             })
 
-            if (!res.ok) throw new Error("Signup failed")
-
+            if (!res.ok) throw new Error(t('signupFailure'))
+            toast.success(t('signupSuccess'))
             router.push("/auth/login")
         } catch (error) {
-            console.error(error)
+            toast.error(t('signupFailure'))
         } finally {
             setIsLoading(false)
         }

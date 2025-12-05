@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Cairo } from "next/font/google";
 import "../globals.css";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { Navbar } from "@/components/Landing/Navbar";
+import { Footer } from "@/components/Landing/Footer";
 import { AuthProvider } from "@/context/AuthContext";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -46,6 +47,7 @@ export default async function RootLayout({
                 <NextIntlClientProvider messages={messages}>
                     <AuthProvider>
                         <Navbar />
+                        <Toaster position="bottom-right" richColors />
                         {children}
                         <Footer />
                     </AuthProvider>

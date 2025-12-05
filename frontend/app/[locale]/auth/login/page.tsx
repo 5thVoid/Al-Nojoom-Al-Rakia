@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { toast } from "sonner"
 
 export default function LoginPage() {
     const t = useTranslations('Auth')
@@ -40,13 +41,14 @@ export default function LoginPage() {
                 body: JSON.stringify(formData),
             })
 
-            if (!res.ok) throw new Error("Login failed")
+            if (!res.ok) throw new Error(t('loginFailure'))
 
             const data = await res.json()
             login(data.token, data.user)
+            toast.success(t('loginSuccess'))
             router.push("/")
         } catch (error) {
-            console.error(error)
+            toast.error(t('loginFailure'))
         } finally {
             setIsLoading(false)
         }
