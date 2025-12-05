@@ -13,7 +13,11 @@ class ProductDisplayView extends Model<
 > {
   declare id: number;
   declare name: string;
+  declare sku: string;
   declare price: number;
+  declare categoryId: number | null;
+  declare manufacturerId: number | null;
+  declare productTypeId: number | null;
   declare stockStatusOverride: string | null;
   declare quantity: number;
   declare stockLabel: "in_stock" | "low_stock" | "out_of_stock" | "pre_order";
@@ -24,11 +28,15 @@ ProductDisplayView.init(
   {
     id: { type: DataTypes.INTEGER, primaryKey: true },
     name: DataTypes.STRING,
+    sku: DataTypes.STRING,
     price: DataTypes.DECIMAL(10, 2),
-    stockStatusOverride: DataTypes.STRING,
+    categoryId: { type: DataTypes.INTEGER, field: "category_id" },
+    manufacturerId: { type: DataTypes.INTEGER, field: "manufacturer_id" },
+    productTypeId: { type: DataTypes.INTEGER, field: "product_type_id" },
+    stockStatusOverride: { type: DataTypes.STRING, field: "stock_status_override" },
     quantity: DataTypes.INTEGER,
-    stockLabel: DataTypes.STRING,
-    isPurchasable: DataTypes.BOOLEAN,
+    stockLabel: { type: DataTypes.STRING, field: "stock_label" },
+    isPurchasable: { type: DataTypes.BOOLEAN, field: "is_purchasable" },
   },
   {
     sequelize,
