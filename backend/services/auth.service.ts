@@ -1,4 +1,4 @@
-import { User } from "../types";
+import { User, UserAddress } from "../types";
 import jwt from "jsonwebtoken";
 
 export class AuthService {
@@ -16,7 +16,7 @@ export class AuthService {
     return this.generateToken(user);
   }
 
-  private generateToken(user: User) {
+  private async generateToken(user: User) {
     const payload = { id: user.id, role: user.role };
     const token = jwt.sign(
       payload,
@@ -24,9 +24,48 @@ export class AuthService {
       { expiresIn: "1d" }
     );
 
+    // Fetch user's address - default if exists, or the only address if user has exactly 1
+    let address = null;
+    
+    // First try to get default address
+    const defaultAddress = await UserAddress.findOne({
+      where: { userId: user.id, isDefault: true },
+    });
+
+    if (defaultAddress) {
+      address = defaultAddress;
+    } else {
+      // Check if user has exactly one address
+      const addresses = await UserAddress.findAll({
+        where: { userId: user.id },
+        limit: 2, // Only fetch 2 to check count efficiently
+      });
+
+      if (addresses.length === 1) {
+        address = addresses[0];
+      }
+    }
+
     return {
       token,
-      user: { id: user.id, email: user.email, role: user.role },
+      user: { 
+        id: user.id, 
+        email: user.email, 
+        role: user.role,
+        address: address ? {
+          id: address.id,
+          recipientName: address.recipientName,
+          streetAddress: address.streetAddress,
+          district: address.district,
+          postalCode: address.postalCode,
+          city: address.city,
+          buildingNumber: address.buildingNumber,
+          secondaryNumber: address.secondaryNumber,
+          phoneNumber: address.phoneNumber,
+          label: address.label,
+          isDefault: address.isDefault,
+        } : null,
+      },
     };
   }
 }

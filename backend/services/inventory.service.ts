@@ -1,4 +1,4 @@
-import { Inventory } from "../types";
+import { Inventory, Product, OrderItem } from "../types";
 import sequelize from "../config/database";
 
 export class InventoryService {
@@ -24,10 +24,15 @@ export class InventoryService {
     return await inventory.reload();
   }
 
-  // User: Buy Item
+  // User: Buy Item (also tracks sale in order_items)
   async decreaseStock(productId: number, quantity: number) {
     const t = await sequelize.transaction();
     try {
+      // Get product price before decrementing
+      const product = await Product.findByPk(productId, { transaction: t });
+      if (!product) throw new Error("Product not found");
+
+      // Decrease inventory
       await Inventory.increment(
         { quantity: -quantity },
         { where: { productId }, transaction: t }
@@ -35,6 +40,16 @@ export class InventoryService {
 
       const updated = await Inventory.findByPk(productId, { transaction: t });
       if (!updated || updated.quantity < 0) throw new Error("OUT_OF_STOCK");
+
+      // Track sale in order_items for best sellers
+      await OrderItem.create(
+        {
+          productId,
+          quantity,
+          priceAtPurchase: product.price,
+        },
+        { transaction: t }
+      );
 
       await t.commit();
       return updated;

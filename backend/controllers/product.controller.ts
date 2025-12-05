@@ -33,6 +33,8 @@ export class ProductController extends BaseController<ProductService> {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
+      const searchTerm = req.query.search as string;
+      const sortByBestSelling = req.query.sortByBestSelling === "true";
 
       // Build filters from query params
       const filters: any = {};
@@ -40,6 +42,11 @@ export class ProductController extends BaseController<ProductService> {
       // Filter by purchasable status
       if (req.query.in_stock === "true") {
         filters.isPurchasable = true;
+      }
+
+      // Filter by best selling status
+      if (req.query.isBestSelling === "true") {
+        filters.isBestSelling = true;
       }
 
       // Filter by category
@@ -65,7 +72,9 @@ export class ProductController extends BaseController<ProductService> {
       const result = await this.prodService.getAllProductsView(
         page,
         limit,
-        filters
+        filters,
+        searchTerm,
+        sortByBestSelling
       );
       res.json(result);
     } catch (err) {

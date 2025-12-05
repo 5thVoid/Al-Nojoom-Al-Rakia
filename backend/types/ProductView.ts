@@ -22,6 +22,8 @@ class ProductDisplayView extends Model<
   declare quantity: number;
   declare stockLabel: "in_stock" | "low_stock" | "out_of_stock" | "pre_order";
   declare isPurchasable: boolean;
+  declare isBestSelling: boolean;
+  declare salesCount30d: number;
 }
 
 ProductDisplayView.init(
@@ -37,6 +39,8 @@ ProductDisplayView.init(
     quantity: DataTypes.INTEGER,
     stockLabel: { type: DataTypes.STRING, field: "stock_label" },
     isPurchasable: { type: DataTypes.BOOLEAN, field: "is_purchasable" },
+    isBestSelling: { type: DataTypes.BOOLEAN, field: "is_best_selling" },
+    salesCount30d: { type: DataTypes.INTEGER, field: "sales_count_30d" },
   },
   {
     sequelize,

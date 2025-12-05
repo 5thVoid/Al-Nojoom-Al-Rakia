@@ -18,7 +18,21 @@ describe("ProductService", () => {
   describe("getAllProductsView", () => {
     it("should query the View model using findAndCountAll with pagination", async () => {
       // 1. Setup Mock Data (Sequelize findAndCountAll returns { rows, count })
-      const mockRows = [{ id: 1, stockLabel: "in_stock" }];
+      const mockRowData = {
+        id: 1,
+        stockLabel: "in_stock",
+        manufacturerId: null,
+        categoryId: null,
+        productTypeId: null,
+        isBestSelling: false,
+        salesCount30d: 5,
+      };
+      
+      const mockRows = [
+        {
+          toJSON: jest.fn().mockReturnValue(mockRowData),
+        },
+      ];
       const mockCount = 1;
 
       const viewSpy = jest
@@ -42,13 +56,51 @@ describe("ProductService", () => {
 
       // 4. Assert the result matches the new Pagination Structure
       expect(result).toEqual({
-        data: mockRows,
+        data: [
+          {
+            ...mockRowData,
+            manufacturer: null,
+            category: null,
+            productType: null,
+          },
+        ],
         meta: {
           totalItems: 1,
           itemsPerPage: 10,
           totalPages: 1,
           currentPage: 1
         }
+      });
+    });
+
+    it("should sort by best selling when sortByBestSelling is true", async () => {
+      const mockRowData = {
+        id: 1,
+        stockLabel: "in_stock",
+        manufacturerId: null,
+        categoryId: null,
+        productTypeId: null,
+        isBestSelling: true,
+        salesCount30d: 50,
+      };
+      
+      const mockRows = [
+        {
+          toJSON: jest.fn().mockReturnValue(mockRowData),
+        },
+      ];
+
+      const viewSpy = jest
+        .spyOn(ProductDisplayView, "findAndCountAll")
+        .mockResolvedValue({ count: 1, rows: mockRows } as any);
+
+      await service.getAllProductsView(1, 10, {}, undefined, true);
+
+      expect(viewSpy).toHaveBeenCalledWith({
+        where: {},
+        limit: 10,
+        offset: 0,
+        order: [['salesCount30d', 'DESC'], ['id', 'DESC']]
       });
     });
   });
