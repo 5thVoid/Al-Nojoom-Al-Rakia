@@ -34,10 +34,32 @@ export class ProductController extends BaseController<ProductService> {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
 
-      // Optional: Handle filtering (e.g. ?in_stock=true)
+      // Build filters from query params
       const filters: any = {};
+
+      // Filter by purchasable status
       if (req.query.in_stock === "true") {
         filters.isPurchasable = true;
+      }
+
+      // Filter by category
+      if (req.query.categoryId) {
+        filters.categoryId = parseInt(req.query.categoryId as string);
+      }
+
+      // Filter by manufacturer
+      if (req.query.manufacturerId) {
+        filters.manufacturerId = parseInt(req.query.manufacturerId as string);
+      }
+
+      // Filter by product type
+      if (req.query.productTypeId) {
+        filters.productTypeId = parseInt(req.query.productTypeId as string);
+      }
+
+      // Filter by stock label (in_stock, low_stock, out_of_stock, pre_order)
+      if (req.query.stockLabel) {
+        filters.stockLabel = req.query.stockLabel;
       }
 
       const result = await this.prodService.getAllProductsView(
