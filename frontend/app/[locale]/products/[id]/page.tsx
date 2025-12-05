@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
+import { useCart } from "@/hooks/useCart"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -44,6 +45,7 @@ export default function ProductPage() {
     const router = useRouter()
     const t = useTranslations('ProductPage')
     const tProducts = useTranslations('Products')
+    const { addToCart, isAdding } = useCart()
 
     const [product, setProduct] = useState<ProductDetails | null>(null)
     const [manufacturer, setManufacturer] = useState<Manufacturer | null>(null)
@@ -186,7 +188,12 @@ export default function ProductPage() {
                             )}
                         </CardContent>
                         <CardFooter className="flex gap-3">
-                            <Button className="flex-1" size="lg">
+                            <Button
+                                className="flex-1"
+                                size="lg"
+                                disabled={isAdding}
+                                onClick={() => addToCart(product.id)}
+                            >
                                 <ShoppingCart className="h-5 w-5 me-2" />
                                 {tProducts('addToCart')}
                             </Button>

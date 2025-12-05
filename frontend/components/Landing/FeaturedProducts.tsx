@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useTranslations } from "next-intl"
+import { useCart } from "@/hooks/useCart"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -35,6 +36,7 @@ interface ProductsResponse {
 
 export function FeaturedProducts() {
     const t = useTranslations('Products')
+    const { addToCart, isAdding } = useCart()
     const [products, setProducts] = useState<Product[]>([])
     const [isLoading, setIsLoading] = useState(true)
 
@@ -159,8 +161,13 @@ export function FeaturedProducts() {
                                 <CardFooter>
                                     <Button
                                         className="w-full"
-                                        disabled={!product.isPurchasable}
+                                        disabled={!product.isPurchasable || isAdding}
                                         variant={product.isPurchasable ? "default" : "secondary"}
+                                        onClick={() => {
+                                            if (product.isPurchasable) {
+                                                addToCart(product.id)
+                                            }
+                                        }}
                                     >
                                         <ShoppingCart className="h-4 w-4 me-2" />
                                         {product.isPurchasable ? t('addToCart') : t('unavailable')}

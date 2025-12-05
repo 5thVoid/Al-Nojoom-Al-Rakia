@@ -21,7 +21,19 @@
         "continueShopping": "متابعة التسوق",
         "emptyTitle": "عربة التسوق فارغة",
         "startShopping": "ابدأ التسوق",
-        "remove": "إزالة"
+        "remove": "إزالة",
+        "loginRequired": "يرجى تسجيل الدخول لاستخدام السلة",
+        "loginButton": "تسجيل الدخول",
+        "quantityUpdated": "تم تحديث الكمية",
+        "updateFailed": "فشل تحديث الكمية",
+        "itemRemoved": "تم إزالة المنتج من السلة",
+        "removeFailed": "فشل إزالة المنتج",
+        "cartCleared": "تم تفريغ السلة",
+        "clearFailed": "فشل تفريغ السلة",
+        "clearCart": "تفريغ السلة",
+        "itemAdded": "تم إضافة المنتج للسلة",
+        "addFailed": "فشل إضافة المنتج للسلة",
+        "authError": "خطأ في المصادقة"
     },
     "Footer": {
         "companyName": "شركة النجوم الراقية للتجارة",
