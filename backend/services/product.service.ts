@@ -55,31 +55,7 @@ export class ProductService extends BaseService<Product> {
 
     // Populate manufacturer, category, and productType names
     const populatedRows = await Promise.all(
-      rows.map(async (row) => {
-        const rowData = row.toJSON() as any;
-
-        // Fetch related entities
-        const [manufacturer, category, productType] = await Promise.all([
-          rowData.manufacturerId
-            ? Manufacturer.findByPk(rowData.manufacturerId)
-            : null,
-          rowData.categoryId ? Category.findByPk(rowData.categoryId) : null,
-          rowData.productTypeId
-            ? ProductType.findByPk(rowData.productTypeId)
-            : null,
-        ]);
-
-        return {
-          ...rowData,
-          manufacturer: manufacturer
-            ? { id: manufacturer.id, name: manufacturer.name }
-            : null,
-          category: category ? { id: category.id, name: category.name } : null,
-          productType: productType
-            ? { id: productType.id, name: productType.name }
-            : null,
-        };
-      })
+      rows.map((row) => this.hydrateProductViewRow(row.toJSON()))
     );
 
     return {
@@ -116,11 +92,15 @@ export class ProductService extends BaseService<Product> {
     }
   }
 
-  // Override GetById to include details
+  // Override GetById to include details from the optimized view
   async getFullDetails(id: number) {
-    return await Product.findByPk(id, {
-      include: ["manufacturer", "category", "product_type", "inventory"],
-    });
+    return this.getProductViewById(id);
+  }
+
+  async getProductViewById(id: number) {
+    const row = await ProductDisplayView.findOne({ where: { id } });
+    if (!row) return null;
+    return this.hydrateProductViewRow(row.toJSON());
   }
 
   // Full-text search on products
@@ -321,6 +301,29 @@ export class ProductService extends BaseService<Product> {
         totalPages: Math.ceil(count / limit),
         currentPage: page,
       },
+    };
+  }
+
+  private async hydrateProductViewRow(rowData: any) {
+    const [manufacturer, category, productType] = await Promise.all([
+      rowData.manufacturerId
+        ? Manufacturer.findByPk(rowData.manufacturerId)
+        : null,
+      rowData.categoryId ? Category.findByPk(rowData.categoryId) : null,
+      rowData.productTypeId
+        ? ProductType.findByPk(rowData.productTypeId)
+        : null,
+    ]);
+
+    return {
+      ...rowData,
+      manufacturer: manufacturer
+        ? { id: manufacturer.id, name: manufacturer.name }
+        : null,
+      category: category ? { id: category.id, name: category.name } : null,
+      productType: productType
+        ? { id: productType.id, name: productType.name }
+        : null,
     };
   }
 }

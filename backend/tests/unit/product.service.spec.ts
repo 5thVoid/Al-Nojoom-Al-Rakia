@@ -1,5 +1,12 @@
 import { ProductService } from "../../services/product.service";
-import { Product, Inventory, ProductDisplayView } from "../../types";
+import {
+  Product,
+  Inventory,
+  ProductDisplayView,
+  Manufacturer,
+  Category,
+  ProductType,
+} from "../../types";
 import sequelize from "../../config/database";
 
 describe("ProductService", () => {
@@ -102,6 +109,56 @@ describe("ProductService", () => {
         offset: 0,
         order: [['salesCount30d', 'DESC'], ['id', 'DESC']]
       });
+    });
+  });
+
+  describe("getProductViewById", () => {
+    it("should return populated product data when found", async () => {
+      const mockRowData = {
+        id: 1,
+        name: "Gaming Laptop",
+        sku: "LAP-001",
+        price: 1999.99,
+        manufacturerId: 2,
+        categoryId: 3,
+        productTypeId: 4,
+        quantity: 5,
+        stockLabel: "in_stock",
+        isPurchasable: true,
+        isBestSelling: false,
+        salesCount30d: 2,
+      };
+
+      jest.spyOn(ProductDisplayView, "findOne").mockResolvedValue({
+        toJSON: jest.fn().mockReturnValue(mockRowData),
+      } as any);
+      jest
+        .spyOn(Manufacturer, "findByPk")
+        .mockResolvedValue({ id: 2, name: "Brand" } as any);
+      jest
+        .spyOn(Category, "findByPk")
+        .mockResolvedValue({ id: 3, name: "Laptops" } as any);
+      jest
+        .spyOn(ProductType, "findByPk")
+        .mockResolvedValue({ id: 4, name: "Gaming" } as any);
+
+      const result = await service.getProductViewById(1);
+
+      expect(ProductDisplayView.findOne).toHaveBeenCalledWith({ where: { id: 1 } });
+      expect(result).toMatchObject({
+        id: 1,
+        manufacturer: { id: 2, name: "Brand" },
+        category: { id: 3, name: "Laptops" },
+        productType: { id: 4, name: "Gaming" },
+      });
+    });
+
+    it("should return null when product is not found", async () => {
+      jest.spyOn(ProductDisplayView, "findOne").mockResolvedValue(null);
+
+      const result = await service.getProductViewById(999);
+
+      expect(result).toBeNull();
     });
   });
 
