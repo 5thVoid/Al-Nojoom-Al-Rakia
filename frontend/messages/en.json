@@ -21,7 +21,19 @@
         "continueShopping": "Continue Shopping",
         "emptyTitle": "Your cart is empty",
         "startShopping": "Start Shopping",
-        "remove": "Remove"
+        "remove": "Remove",
+        "loginRequired": "Please log in to use the cart",
+        "loginButton": "Log In",
+        "quantityUpdated": "Quantity updated",
+        "updateFailed": "Failed to update quantity",
+        "itemRemoved": "Item removed from cart",
+        "removeFailed": "Failed to remove item",
+        "cartCleared": "Cart cleared",
+        "clearFailed": "Failed to clear cart",
+        "clearCart": "Clear Cart",
+        "itemAdded": "Item added to cart",
+        "addFailed": "Failed to add item to cart",
+        "authError": "Authentication error"
     },
     "Footer": {
         "companyName": "Nojoom Al Raqia for Trading Co.",

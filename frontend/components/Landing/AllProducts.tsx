@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "@/i18n/navigation"
 import { useTranslations } from "next-intl"
+import { useCart } from "@/hooks/useCart"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -54,6 +55,7 @@ export function AllProducts() {
     const t = useTranslations('AllProducts')
     const tProducts = useTranslations('Products')
     const router = useRouter()
+    const { addToCart, isAdding } = useCart()
 
     const [products, setProducts] = useState<Product[]>([])
     const [manufacturers, setManufacturers] = useState<Manufacturer[]>([])
@@ -405,8 +407,14 @@ export function AllProducts() {
                                 <CardFooter>
                                     <Button
                                         className="w-full"
-                                        disabled={!product.isPurchasable}
+                                        disabled={!product.isPurchasable || isAdding}
                                         variant={product.isPurchasable ? "default" : "secondary"}
+                                        onClick={(e) => {
+                                            e.stopPropagation()
+                                            if (product.isPurchasable) {
+                                                addToCart(product.id)
+                                            }
+                                        }}
                                     >
                                         <ShoppingCart className="h-4 w-4 me-2" />
                                         {product.isPurchasable ? tProducts('addToCart') : tProducts('unavailable')}
