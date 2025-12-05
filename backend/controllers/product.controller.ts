@@ -82,6 +82,21 @@ export class ProductController extends BaseController<ProductService> {
     }
   };
 
+  // Override GetOne to use populated view response
+  getOne = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const product = await this.prodService.getProductViewById(
+        Number(req.params.id)
+      );
+      if (!product) {
+        return res.status(404).json({ error: "Not Found" });
+      }
+      res.json(product);
+    } catch (err) {
+      next(err);
+    }
+  };
+
   // Buy Action
   buy = async (req: Request, res: Response, next: NextFunction) => {
     try {
