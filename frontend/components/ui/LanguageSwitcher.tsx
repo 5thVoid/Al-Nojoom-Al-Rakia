@@ -1,0 +1,64 @@
+"use client"
+
+import { useLocale } from "next-intl"
+import { useRouter, usePathname } from "@/i18n/navigation"
+import { Button } from "@/components/ui/button"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Globe } from "lucide-react"
+
+const languages = [
+    {
+        code: 'ar',
+        name: 'العربية',
+        flag: '🇸🇦',
+        dir: 'rtl'
+    },
+    {
+        code: 'en',
+        name: 'English',
+        flag: '🇬🇧',
+        dir: 'ltr'
+    }
+]
+
+export function LanguageSwitcher() {
+    const locale = useLocale()
+    const router = useRouter()
+    const pathname = usePathname()
+
+    const currentLanguage = languages.find(lang => lang.code === locale) || languages[0]
+
+    const switchLanguage = (newLocale: string) => {
+        router.replace(pathname, { locale: newLocale })
+    }
+
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="gap-2">
+                    <span className="text-lg">{currentLanguage.flag}</span>
+                    <span className="hidden md:inline-block">{currentLanguage.name}</span>
+                    <Globe className="h-4 w-4" />
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="space-y-0.5">
+                {languages.map((language) => (
+                    <DropdownMenuItem
+                        key={language.code}
+                        onClick={() => switchLanguage(language.code)}
+                        className={`gap-2 cursor-pointer ${locale === language.code ? 'bg-accent text-primary-foreground' : ''
+                            }`}
+                    >
+                        <span className="text-lg">{language.flag}</span>
+                        <span className="hidden md:inline-block">{language.name}</span>
+                    </DropdownMenuItem>
+                ))}
+            </DropdownMenuContent>
+        </DropdownMenu>
+    )
+}
