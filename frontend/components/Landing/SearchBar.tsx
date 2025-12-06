@@ -37,6 +37,7 @@ export function SearchBar() {
     const navigationItems = [
         { name: t('home'), path: '/', icon: Home },
         { name: t('products'), path: '/products', icon: ShoppingBag },
+        { name: t('profile'), path: '/profile', icon: User },
         { name: t('login'), path: '/auth/login', icon: LogIn },
         { name: t('signup'), path: '/auth/signup', icon: User },
     ]

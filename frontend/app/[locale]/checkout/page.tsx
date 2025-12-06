@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "@/i18n/navigation"
 import { useAuth } from "@/context/AuthContext"
+import { useUser } from "@/hooks/useUser"
 import { useTranslations } from "next-intl"
 import { CheckoutSummary } from "@/components/checkout/CheckoutSummary"
 import { ShippingForm } from "@/components/checkout/ShippingForm"
@@ -53,6 +54,7 @@ export interface PaymentData {
 export default function CheckoutPage() {
     const router = useRouter()
     const { isAuthenticated, token, isLoading: authLoading } = useAuth()
+    const { defaultAddress, isLoadingAddress, saveAddress, userEmail } = useUser()
     const t = useTranslations('Checkout')
 
     const [currentStep, setCurrentStep] = useState(1)
@@ -162,7 +164,11 @@ export default function CheckoutPage() {
                     {currentStep === 1 && (
                         <ShippingForm
                             initialData={shippingData}
+                            defaultAddress={defaultAddress}
+                            userEmail={userEmail}
                             onSubmit={handleShippingSubmit}
+                            onSaveAddress={saveAddress}
+                            existingAddressId={defaultAddress?.id}
                         />
                     )}
                     {currentStep === 2 && (

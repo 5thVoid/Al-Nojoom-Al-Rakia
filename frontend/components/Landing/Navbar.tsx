@@ -65,9 +65,16 @@ export function Navbar() {
 
                     <div className="hidden items-center gap-2 md:flex ml-2">
                         {isAuthenticated ? (
-                            <Button variant="ghost" size="sm" onClick={logout}>
-                                Logout
-                            </Button>
+                            <>
+                                <Link href="/profile">
+                                    <Button variant="ghost" size="sm">
+                                        {t('profile')}
+                                    </Button>
+                                </Link>
+                                <Button variant="ghost" size="sm" onClick={logout}>
+                                    {t('logout')}
+                                </Button>
+                            </>
                         ) : (
                             <>
                                 <Link href="/auth/login">

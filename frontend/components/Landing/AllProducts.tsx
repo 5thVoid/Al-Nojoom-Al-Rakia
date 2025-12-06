@@ -4,11 +4,13 @@ import { useEffect, useState } from "react"
 import { useRouter } from "@/i18n/navigation"
 import { useTranslations } from "next-intl"
 import { useCart } from "@/hooks/useCart"
+import { useDebounce } from "@/hooks/useDebounce"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
+import { ProductSearchBar } from "@/components/products/ProductSearchBar"
 import { ShoppingCart, Filter, X } from "lucide-react"
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination } from 'swiper/modules'
@@ -63,9 +65,26 @@ interface Category {
     subcategories?: Category[]
 }
 
-export function AllProducts() {
+interface AllProductsProps {
+    /** Initial search query */
+    initialSearch?: string
+    /** Whether to show the integrated search bar */
+    showSearch?: boolean
+    /** Custom title for the page */
+    title?: string
+    /** Whether to show the title */
+    showTitle?: boolean
+}
+
+export function AllProducts({
+    initialSearch = '',
+    showSearch = false,
+    title,
+    showTitle = true
+}: AllProductsProps = {}) {
     const t = useTranslations('AllProducts')
     const tProducts = useTranslations('Products')
+    const tPage = useTranslations('ProductsPage')
     const router = useRouter()
     const { addToCart, isAdding } = useCart()
 
@@ -74,6 +93,10 @@ export function AllProducts() {
     const [productTypes, setProductTypes] = useState<ProductType[]>([])
     const [categories, setCategories] = useState<Category[]>([])
     const [isLoading, setIsLoading] = useState(true)
+
+    // Search state with debounce
+    const [searchQuery, setSearchQuery] = useState(initialSearch)
+    const debouncedSearch = useDebounce(searchQuery, 300)
 
     // Filter states
     const [selectedManufacturers, setSelectedManufacturers] = useState<number[]>([])
@@ -93,6 +116,7 @@ export function AllProducts() {
                     limit: '50',
                 });
 
+                if (debouncedSearch) params.append('search', debouncedSearch);
                 if (selectedCategory) params.append('categoryId', selectedCategory.toString());
                 selectedManufacturers.forEach(id => params.append('manufacturerId', id.toString()));
                 selectedProductTypes.forEach(id => params.append('productTypeId', id.toString()));
@@ -127,7 +151,7 @@ export function AllProducts() {
         };
 
         fetchData();
-    }, [selectedCategory, selectedManufacturers, selectedProductTypes, inStockOnly]);
+    }, [debouncedSearch, selectedCategory, selectedManufacturers, selectedProductTypes, inStockOnly]);
 
     const toggleManufacturer = (id: number) => {
         setSelectedManufacturers(prev =>
@@ -147,6 +171,7 @@ export function AllProducts() {
         setSelectedCategory(null)
         setPriceRange([0, 5000])
         setInStockOnly(false)
+        setSearchQuery('')
     }
 
     // Client-side price range filtering only (other filters are server-side via API)
@@ -212,20 +237,106 @@ export function AllProducts() {
     }
 
     return (
-        <div className={`container max-w-screen-2xl py-8 px-28`}>
-            <div className="flex items-center justify-between mb-8">
-                <h1 className="text-3xl font-bold tracking-tight text-foreground">
-                    {t('title')}
-                </h1>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setShowFilters(!showFilters)}
-                    className="md:hidden"
-                >
-                    <Filter className="h-4 w-4 me-2" />
-                    {showFilters ? t('hideFilters') : t('showFilters')}
-                </Button>
+        <div className={`container max-w-screen-2xl py-8 px-4 md:px-8 lg:px-28`}>
+            {/* Header Section */}
+            <div className="flex flex-col gap-6 mb-8">
+                <div className="flex items-center justify-between">
+                    {showTitle && (
+                        <h1 className="text-3xl font-bold tracking-tight text-foreground">
+                            {title || t('title')}
+                        </h1>
+                    )}
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setShowFilters(!showFilters)}
+                        className="md:hidden"
+                    >
+                        <Filter className="h-4 w-4 me-2" />
+                        {showFilters ? t('hideFilters') : t('showFilters')}
+                    </Button>
+                </div>
+
+                {/* Search Bar */}
+                {showSearch && (
+                    <ProductSearchBar
+                        value={searchQuery}
+                        onChange={setSearchQuery}
+                        className="max-w-2xl"
+                    />
+                )}
+
+                {/* Active Filters Summary */}
+                {(searchQuery || selectedCategory || selectedManufacturers.length > 0 || selectedProductTypes.length > 0 || inStockOnly) && showSearch && (
+                    <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-sm text-muted-foreground">{tPage('activeFilters')}:</span>
+                        {searchQuery && (
+                            <Button
+                                variant="secondary"
+                                size="sm"
+                                onClick={() => setSearchQuery('')}
+                                className="h-7 gap-1"
+                            >
+                                "{searchQuery}"
+                                <X className="h-3 w-3" />
+                            </Button>
+                        )}
+                        {selectedCategory && (
+                            <Button
+                                variant="secondary"
+                                size="sm"
+                                onClick={() => setSelectedCategory(null)}
+                                className="h-7 gap-1"
+                            >
+                                {categories.find(c => c.id === selectedCategory)?.name}
+                                <X className="h-3 w-3" />
+                            </Button>
+                        )}
+                        {selectedManufacturers.map(id => (
+                            <Button
+                                key={id}
+                                variant="secondary"
+                                size="sm"
+                                onClick={() => toggleManufacturer(id)}
+                                className="h-7 gap-1"
+                            >
+                                {manufacturers.find(m => m.id === id)?.name}
+                                <X className="h-3 w-3" />
+                            </Button>
+                        ))}
+                        {selectedProductTypes.map(id => (
+                            <Button
+                                key={id}
+                                variant="secondary"
+                                size="sm"
+                                onClick={() => toggleProductType(id)}
+                                className="h-7 gap-1"
+                            >
+                                {productTypes.find(p => p.id === id)?.name}
+                                <X className="h-3 w-3" />
+                            </Button>
+                        ))}
+                        {inStockOnly && (
+                            <Button
+                                variant="secondary"
+                                size="sm"
+                                onClick={() => setInStockOnly(false)}
+                                className="h-7 gap-1"
+                            >
+                                {t('inStockOnly')}
+                                <X className="h-3 w-3" />
+                            </Button>
+                        )}
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={clearFilters}
+                            className="h-7 text-destructive hover:text-destructive"
+                        >
+                            {tPage('clearAll')}
+                        </Button>
+                    </div>
+                )}
             </div>
 
             {/* Categories Carousel */}

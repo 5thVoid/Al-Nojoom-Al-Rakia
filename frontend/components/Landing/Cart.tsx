@@ -296,7 +296,10 @@ export function Cart() {
                         <Button
                             variant="link"
                             className="text-sm text-primary"
-                            onClick={() => setIsOpen(false)}
+                            onClick={() => {
+                                setIsOpen(false)
+                                router.push('/products')
+                            }}
                         >
                             {t('startShopping')}
                         </Button>

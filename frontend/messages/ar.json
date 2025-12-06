@@ -7,6 +7,8 @@
         "cart": "عربة التسوق",
         "login": "تسجيل الدخول",
         "signup": "إنشاء حساب",
+        "profile": "حسابي",
+        "logout": "تسجيل الخروج",
         "searchPlaceholder": "ابحث عن منتجات، تصنيفات...",
         "noResults": "لا توجد نتائج.",
         "suggestions": "اقتراحات",
@@ -113,6 +115,21 @@
         "productType": "نوع المنتج",
         "typeId": "معرف النوع"
     },
+    "ProductsPage": {
+        "title": "جميع المنتجات",
+        "searchPlaceholder": "ابحث بالاسم، التصنيف، الشركة المصنعة...",
+        "filters": "الفلاتر",
+        "activeFilters": "الفلاتر النشطة",
+        "clearAll": "مسح الكل",
+        "subcategories": "تصنيفات فرعية",
+        "showingResults": "عرض {count} من {total} منتج",
+        "noProductsTitle": "لا توجد منتجات",
+        "noProductsDescription": "حاول تعديل البحث أو الفلاتر للعثور على ما تبحث عنه.",
+        "clearFilters": "مسح الفلاتر",
+        "previous": "السابق",
+        "next": "التالي",
+        "pageOf": "صفحة {current} من {total}"
+    },
     "Search": {
         "title": "نتائج البحث",
         "resultsFor": "نتائج البحث عن \"{query}\"",
@@ -163,6 +180,86 @@
             "free": "مجاني",
             "tax": "الضريبة",
             "total": "الإجمالي"
+        },
+        "saveAddress": {
+            "title": "حفظ العنوان",
+            "description": "هل تريد حفظ هذا العنوان كعنوان الشحن الأساسي للطلبات المستقبلية؟",
+            "yes": "نعم، احفظ العنوان",
+            "no": "لا، متابعة",
+            "saving": "جاري الحفظ...",
+            "success": "تم حفظ العنوان بنجاح",
+            "error": "فشل حفظ العنوان"
+        }
+    },
+    "Profile": {
+        "title": "حسابي",
+        "logout": "تسجيل الخروج",
+        "info": {
+            "title": "معلومات الحساب",
+            "description": "تفاصيل حسابك",
+            "userId": "رقم المستخدم",
+            "email": "البريد الإلكتروني",
+            "role": "الصلاحية"
+        },
+        "addresses": {
+            "title": "عناويني",
+            "description": "إدارة عناوين الشحن الخاصة بك",
+            "add": "إضافة عنوان",
+            "addFirst": "أضف عنوانك الأول",
+            "empty": "لم تقم بإضافة أي عناوين بعد"
+        },
+        "address": {
+            "default": "الأساسي",
+            "edit": "تعديل",
+            "delete": "حذف",
+            "setDefault": "تعيين كأساسي",
+            "created": "تم إنشاء العنوان بنجاح",
+            "updated": "تم تحديث العنوان بنجاح",
+            "deleted": "تم حذف العنوان بنجاح",
+            "defaultSet": "تم تحديث العنوان الأساسي"
+        },
+        "addressForm": {
+            "addTitle": "إضافة عنوان جديد",
+            "addDescription": "أضف عنوان شحن جديد إلى حسابك",
+            "editTitle": "تعديل العنوان",
+            "editDescription": "قم بتحديث تفاصيل عنوان الشحن",
+            "recipientName": "اسم المستلم",
+            "recipientNamePlaceholder": "السيد محمد أحمد",
+            "streetAddress": "عنوان الشارع",
+            "streetAddressPlaceholder": "شارع الملك فهد",
+            "district": "الحي",
+            "districtPlaceholder": "حي العليا",
+            "city": "المدينة",
+            "cityPlaceholder": "الرياض",
+            "postalCode": "الرمز البريدي",
+            "postalCodePlaceholder": "12345",
+            "buildingNumber": "رقم المبنى",
+            "buildingNumberPlaceholder": "12",
+            "secondaryNumber": "رقم الوحدة",
+            "secondaryNumberPlaceholder": "4أ",
+            "phoneNumber": "رقم الهاتف",
+            "phoneNumberPlaceholder": "+966501234567",
+            "label": "تسمية العنوان",
+            "labelPlaceholder": "المنزل، العمل، إلخ.",
+            "setAsDefault": "تعيين كعنوان أساسي",
+            "setAsDefaultDescription": "استخدم هذا العنوان للشراء ",
+            "cancel": "إلغاء",
+            "save": "حفظ العنوان",
+            "update": "تحديث العنوان",
+            "saving": "جاري الحفظ..."
+        },
+        "deleteDialog": {
+            "title": "حذف العنوان",
+            "description": "هل أنت متأكد من حذف هذا العنوان؟ لا يمكن التراجع عن هذا الإجراء.",
+            "cancel": "إلغاء",
+            "confirm": "حذف",
+            "deleting": "جاري الحذف..."
+        },
+        "errors": {
+            "fetchFailed": "فشل تحميل العناوين",
+            "saveFailed": "فشل حفظ العنوان",
+            "deleteFailed": "فشل حذف العنوان",
+            "setDefaultFailed": "فشل تعيين العنوان الأساسي"
         }
     }
 }

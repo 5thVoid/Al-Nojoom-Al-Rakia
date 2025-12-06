@@ -3,10 +3,25 @@
 import React, { createContext, useContext, useEffect, useState } from "react"
 import { useRouter } from "@/i18n/navigation"
 
-interface User {
+export interface Address {
+    id: number
+    recipientName: string
+    streetAddress: string
+    district: string
+    postalCode: string
+    city: string
+    buildingNumber: string
+    secondaryNumber: string
+    phoneNumber: string
+    label: string
+    isDefault: boolean
+}
+
+export interface User {
     id: number
     email: string
     role: string
+    address?: Address
 }
 
 interface AuthContextType {
