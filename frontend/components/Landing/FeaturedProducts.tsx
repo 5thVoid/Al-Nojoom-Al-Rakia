@@ -169,19 +169,19 @@ export function FeaturedProducts() {
                                     <div className="mt-3 space-y-1 text-xs text-muted-foreground">
                                         {product.manufacturer && (
                                             <div className="flex items-center gap-1">
-                                                <span>Manufacturer : </span>
+                                                <span>{t('manufacturer')} : </span>
                                                 <span className="font-semibold">{product.manufacturer.name}</span>
                                             </div>
                                         )}
                                         {product.category && (
                                             <div className="flex items-center gap-1">
-                                                <span>Category : </span>
+                                                <span>{t('category')} : </span>
                                                 <span className="font-semibold">{product.category.name}</span>
                                             </div>
                                         )}
                                         {product.productType && (
                                             <div className="flex items-center gap-1">
-                                                <span>Product Type : </span>
+                                                <span>{t('productType')} : </span>
                                                 <span className="font-semibold">{product.productType.name}</span>
                                             </div>
                                         )}

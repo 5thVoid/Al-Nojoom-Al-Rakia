@@ -81,7 +81,10 @@
         "preOrder": "Pre-Order",
         "addToCart": "Add to Cart",
         "unavailable": "Unavailable",
-        "onlyLeft": "Only {count} left!"
+        "onlyLeft": "Only {count} left!",
+        "manufacturer": "Manufacturer",
+        "category": "Category",
+        "productType": "Product Type"
     },
     "AllProducts": {
         "title": "All Products",

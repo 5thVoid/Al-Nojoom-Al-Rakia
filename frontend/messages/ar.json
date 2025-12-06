@@ -81,7 +81,10 @@
         "preOrder": "طلب مسبق",
         "addToCart": "أضف للسلة",
         "unavailable": "غير متاح",
-        "onlyLeft": "فقط {count} متبقي!"
+        "onlyLeft": "فقط {count} متبقي!",
+        "manufacturer": "الشركة المصنعة",
+        "category": "التصنيف",
+        "productType": "نوع المنتج"
     },
     "AllProducts": {
         "title": "جميع المنتجات",

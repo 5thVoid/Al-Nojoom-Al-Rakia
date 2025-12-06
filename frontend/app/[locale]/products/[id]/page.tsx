@@ -130,9 +130,9 @@ export default function ProductPage() {
 
             <div className="grid md:grid-cols-2 gap-8">
                 {/* Product Image Card */}
-                <Card className="overflow-hidden">
+                <Card className="overflow-hidden bg-background">
                     <CardContent className="p-0">
-                        <div className="relative aspect-square bg-muted flex items-center justify-center">
+                        <div className="relative aspect-square flex items-center justify-center">
                             <Package className="h-32 w-32 text-muted-foreground/20" />
                             {/* Placeholder for product image */}
                         </div>
