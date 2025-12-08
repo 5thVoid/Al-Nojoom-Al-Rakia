@@ -243,7 +243,6 @@ export function AllProducts({
                     selectedCategoryId={selectedCategory}
                     onSelectCategory={setSelectedCategory}
                     variant="carousel"
-                    showParentName={true}
                 />
             </div>
 

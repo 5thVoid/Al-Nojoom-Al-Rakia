@@ -74,7 +74,7 @@ export default function SearchPage() {
             </p>
 
             {products.length === 0 ? (
-                <Card className="bg-background">
+                <Card>
                     <CardContent className="py-12 text-center">
                         <p className="text-muted-foreground">{t('noResults')}</p>
                     </CardContent>
@@ -87,6 +87,7 @@ export default function SearchPage() {
                             product={product}
                             showMetadata={true}
                             showLowStockWarning={true}
+                            variant="grid"
                         />
                     ))}
                 </div>
