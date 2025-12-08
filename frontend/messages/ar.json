@@ -282,5 +282,20 @@
             "deleteFailed": "فشل حذف العنوان",
             "setDefaultFailed": "فشل تعيين العنوان الأساسي"
         }
+    },
+    "AdminSidebar": {
+        "adminPanel": "لوحة الإدارة",
+        "profile": "الملف الشخصي",
+        "users": "المستخدمون",
+        "orders": "الطلبات",
+        "products": "المنتجات",
+        "categories": "الفئات",
+        "manufacturers": "الشركات المصنعة",
+        "productTypes": "أنواع المنتجات",
+        "login": "تسجيل الدخول",
+        "backToStore": "العودة للمتجر",
+        "openMenu": "فتح القائمة",
+        "expandSidebar": "توسيع القائمة الجانبية",
+        "collapseSidebar": "طي القائمة الجانبية"
     }
 }

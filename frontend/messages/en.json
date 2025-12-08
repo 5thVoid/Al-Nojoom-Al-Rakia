@@ -282,5 +282,20 @@
             "deleteFailed": "Failed to delete address",
             "setDefaultFailed": "Failed to set default address"
         }
+    },
+    "AdminSidebar": {
+        "adminPanel": "Admin Panel",
+        "profile": "Profile",
+        "users": "Users",
+        "orders": "Orders",
+        "products": "Products",
+        "categories": "Categories",
+        "manufacturers": "Manufacturers",
+        "productTypes": "Product Types",
+        "login": "Login",
+        "backToStore": "Back to Store",
+        "openMenu": "Open menu",
+        "expandSidebar": "Expand sidebar",
+        "collapseSidebar": "Collapse sidebar"
     }
 }

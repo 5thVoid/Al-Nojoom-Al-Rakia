@@ -55,7 +55,7 @@ export function Navbar() {
                     </Link>
                     {isAuthenticated && user?.role === 'admin' && (
                         <Link
-                            href="/admin-dashboard"
+                            href="/admin"
                         >
                             {t('adminDashboard')}
                         </Link>
