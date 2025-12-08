@@ -12,6 +12,7 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Loader2 } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface DeleteAddressDialogProps {
     open: boolean
@@ -44,7 +45,7 @@ export function DeleteAddressDialog({
                     <AlertDialogAction
                         onClick={onConfirm}
                         disabled={isDeleting}
-                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        className="bg-destructive/70 hover:bg-destructive"
                     >
                         {isDeleting ? (
                             <>

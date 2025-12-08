@@ -8,6 +8,7 @@
         "login": "Log in",
         "signup": "Sign up",
         "profile": "Profile",
+        "adminDashboard": "Admin Dashboard",
         "logout": "Logout",
         "searchPlaceholder": "Search products, categories...",
         "noResults": "No results found.",
@@ -136,6 +137,14 @@
         "noResults": "No products found matching your search",
         "back": "Back"
     },
+    "CategoriesPage": {
+        "title": "Categories",
+        "description": "Browse products by category",
+        "allCategories": "All Categories",
+        "products": "products",
+        "noProducts": "No products found in this category",
+        "viewAllInCategory": "View all in {category}"
+    },
     "Checkout": {
         "title": "Checkout",
         "steps": {
@@ -143,8 +152,20 @@
             "payment": "Payment",
             "review": "Review"
         },
+        "addressSelection": {
+            "title": "Delivery Address",
+            "noAddresses": "You don't have any saved addresses yet",
+            "addAddress": "Add Your First Address",
+            "addNewAddress": "Add New Address",
+            "default": "Default",
+            "pleaseSelectAddress": "Please select a delivery address",
+            "addressCreated": "Address created successfully",
+            "addressCreateFailed": "Failed to create address"
+        },
         "shipping": {
             "title": "Shipping Address",
+            "contactInfo": "Contact Information",
+            "deliveryTo": "Delivering to",
             "firstName": "First Name",
             "lastName": "Last Name",
             "email": "Email",

@@ -53,38 +53,68 @@ export function useUser() {
         }
     }, [isAuthenticated, token, fetchDefaultAddress])
 
-    // Function to save or update an address
-    const saveAddress = async (addressData: Partial<Address>, existingAddressId?: number): Promise<Address | null> => {
+    // Function to create a new address
+    const createAddress = async (addressData: Partial<Address>): Promise<Address | null> => {
         if (!token) return null
 
         try {
-            const url = existingAddressId
-                ? `/api/address/${existingAddressId}`
-                : '/api/address'
-
-            const method = existingAddressId ? 'PUT' : 'POST'
-
-            const response = await fetch(url, {
-                method,
+            const response = await fetch('/api/address', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({
-                    ...addressData,
-                    isDefault: true,
-                }),
+                body: JSON.stringify(addressData),
             })
 
             if (response.ok) {
                 const data = await response.json()
-                const savedAddress = data.address || data
-                setDefaultAddress(savedAddress)
-                return savedAddress
+                const createdAddress = data.address || data
+                if (createdAddress.isDefault) {
+                    setDefaultAddress(createdAddress)
+                }
+                return createdAddress
             }
+
+            // Log error response for debugging
+            const errorData = await response.json().catch(() => ({}))
+            console.error('Failed to create address:', response.status, errorData)
             return null
         } catch (error) {
-            console.error('Failed to save address:', error)
+            console.error('Failed to create address:', error)
+            return null
+        }
+    }
+
+    // Function to update an existing address
+    const updateAddress = async (addressId: number, addressData: Partial<Address>): Promise<Address | null> => {
+        if (!token) return null
+
+        try {
+            const response = await fetch(`/api/address/${addressId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify(addressData),
+            })
+
+            if (response.ok) {
+                const data = await response.json()
+                const updatedAddress = data.address || data
+                if (updatedAddress.isDefault) {
+                    setDefaultAddress(updatedAddress)
+                }
+                return updatedAddress
+            }
+
+            // Log error response for debugging
+            const errorData = await response.json().catch(() => ({}))
+            console.error('Failed to update address:', response.status, errorData)
+            return null
+        } catch (error) {
+            console.error('Failed to update address:', error)
             return null
         }
     }
@@ -103,6 +133,7 @@ export function useUser() {
         defaultAddress,
         isLoadingAddress,
         fetchDefaultAddress,
-        saveAddress,
+        createAddress,
+        updateAddress,
     }
 }

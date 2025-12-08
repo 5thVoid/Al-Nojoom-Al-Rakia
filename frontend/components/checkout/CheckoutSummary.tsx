@@ -39,7 +39,7 @@ export function CheckoutSummary({ cartData }: CheckoutSummaryProps) {
     const total = cartData.totals.subtotal + shipping + tax
 
     return (
-        <Card className="sticky top-4">
+        <Card className="sticky top-4 bg-background">
             <CardHeader>
                 <CardTitle>{t('summary.title')}</CardTitle>
             </CardHeader>

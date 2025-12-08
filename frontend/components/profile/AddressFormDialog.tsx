@@ -114,6 +114,17 @@ export function AddressFormDialog({
                             required
                         />
                     </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="phoneNumber">{t('addressForm.phoneNumber')} *</Label>
+                        <Input
+                            id="phoneNumber"
+                            name="phoneNumber"
+                            value={formData.phoneNumber}
+                            onChange={handleChange}
+                            placeholder={t('addressForm.phoneNumberPlaceholder')}
+                            required
+                        />
+                    </div>
 
                     {/* Street Address */}
                     <div className="space-y-2">

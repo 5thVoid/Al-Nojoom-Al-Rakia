@@ -2,39 +2,16 @@
 
 import { useEffect, useState } from "react"
 import { useTranslations } from "next-intl"
-import { useCart } from "@/hooks/useCart"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
+import { ProductCard, Product } from "@/components/products/ProductCard"
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Autoplay } from 'swiper/modules'
-import { ShoppingCart } from "lucide-react"
 
 // Import Swiper styles
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
-
-interface Product {
-    id: number
-    name: string
-    price: string
-    stockStatusOverride: string | null
-    quantity: number
-    stockLabel: string
-    isPurchasable: boolean
-    manufacturer?: {
-        id: number
-        name: string
-    }
-    category?: {
-        id: number
-        name: string
-    }
-    productType?: {
-        id: number
-        name: string
-    }
-}
 
 interface ProductsResponse {
     data: Product[]
@@ -48,7 +25,6 @@ interface ProductsResponse {
 
 export function FeaturedProducts() {
     const t = useTranslations('Products')
-    const { addToCart, isAdding } = useCart()
     const [products, setProducts] = useState<Product[]>([])
     const [isLoading, setIsLoading] = useState(true)
 
@@ -68,46 +44,28 @@ export function FeaturedProducts() {
         fetchProducts()
     }, [])
 
-    const getStockBadgeColor = (stockLabel: string) => {
-        switch (stockLabel) {
-            case 'in_stock':
-                return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-            case 'low_stock':
-                return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-            case 'out_of_stock':
-                return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-            case 'pre_order':
-                return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
-            default:
-                return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
-        }
-    }
-
-    const getStockLabel = (stockLabel: string) => {
-        const labels: Record<string, string> = {
-            in_stock: t('inStock'),
-            low_stock: t('lowStock'),
-            out_of_stock: t('outOfStock'),
-            pre_order: t('preOrder')
-        }
-        return labels[stockLabel] || stockLabel
-    }
-
     if (isLoading) {
         return (
-            <section>
+            <section className="bg-muted/10 px-28">
                 <div className="container max-w-screen-2xl">
-                    <h2 className="text-3xl font-bold tracking-tight text-center mb-12">
+                    <h2 className="text-3xl font-bold tracking-tight text-center my-12 text-foreground">
                         {t('title')}
                     </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-12">
                         {[...Array(3)].map((_, i) => (
-                            <Card key={i} className="animate-pulse">
-                                <CardHeader>
-                                    <div className="h-6 bg-muted rounded w-3/4"></div>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="h-4 bg-muted rounded w-1/2"></div>
+                            <Card key={i} className="overflow-hidden">
+                                <Skeleton className="aspect-[4/3]" />
+                                <CardContent className="p-4 space-y-3">
+                                    <div className="flex justify-between">
+                                        <Skeleton className="h-5 w-3/4" />
+                                        <Skeleton className="h-5 w-16" />
+                                    </div>
+                                    <Skeleton className="h-6 w-24" />
+                                    <div className="space-y-1">
+                                        <Skeleton className="h-3 w-32" />
+                                        <Skeleton className="h-3 w-28" />
+                                    </div>
+                                    <Skeleton className="h-10 w-full" />
                                 </CardContent>
                             </Card>
                         ))}
@@ -145,70 +103,11 @@ export function FeaturedProducts() {
                 >
                     {products.map((product) => (
                         <SwiperSlide key={product.id} className="mb-12">
-                            <Card className="h-full flex flex-col hover:shadow-lg transition-shadow duration-500">
-                                <CardHeader>
-                                    <div className="flex items-start justify-between gap-2">
-                                        <CardTitle className="text-lg line-clamp-2">
-                                            {product.name}
-                                        </CardTitle>
-                                        <span
-                                            className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getStockBadgeColor(
-                                                product.stockLabel
-                                            )}`}
-                                        >
-                                            {getStockLabel(product.stockLabel)}
-                                        </span>
-                                    </div>
-                                </CardHeader>
-                                <CardContent className="flex-1">
-                                    <div className="text-2xl font-bold text-primary">
-                                        ${product.price}
-                                    </div>
-
-                                    {/* Product metadata */}
-                                    <div className="mt-3 space-y-1 text-xs text-muted-foreground">
-                                        {product.manufacturer && (
-                                            <div className="flex items-center gap-1">
-                                                <span>{t('manufacturer')} : </span>
-                                                <span className="font-semibold">{product.manufacturer.name}</span>
-                                            </div>
-                                        )}
-                                        {product.category && (
-                                            <div className="flex items-center gap-1">
-                                                <span>{t('category')} : </span>
-                                                <span className="font-semibold">{product.category.name}</span>
-                                            </div>
-                                        )}
-                                        {product.productType && (
-                                            <div className="flex items-center gap-1">
-                                                <span>{t('productType')} : </span>
-                                                <span className="font-semibold">{product.productType.name}</span>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {product.quantity > 0 && product.quantity <= 5 && (
-                                        <CardDescription className="mt-2">
-                                            {t('onlyLeft', { count: product.quantity })}
-                                        </CardDescription>
-                                    )}
-                                </CardContent>
-                                <CardFooter>
-                                    <Button
-                                        className="w-full"
-                                        disabled={!product.isPurchasable || isAdding}
-                                        variant={product.isPurchasable ? "default" : "secondary"}
-                                        onClick={() => {
-                                            if (product.isPurchasable) {
-                                                addToCart(product.id)
-                                            }
-                                        }}
-                                    >
-                                        <ShoppingCart className="h-4 w-4 me-2" />
-                                        {product.isPurchasable ? t('addToCart') : t('unavailable')}
-                                    </Button>
-                                </CardFooter>
-                            </Card>
+                            <ProductCard
+                                product={product}
+                                showMetadata={true}
+                                showLowStockWarning={true}
+                            />
                         </SwiperSlide>
                     ))}
                 </Swiper>

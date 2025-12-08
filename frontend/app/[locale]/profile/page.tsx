@@ -168,7 +168,7 @@ export default function ProfilePage() {
             <div className="grid gap-8 md:grid-cols-3">
                 {/* User Info Section */}
                 <div className="md:col-span-1">
-                    <Card>
+                    <Card className="bg-background">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <UserIcon className="h-5 w-5" />
@@ -224,7 +224,7 @@ export default function ProfilePage() {
 
                 {/* Addresses Section */}
                 <div className="md:col-span-2">
-                    <Card>
+                    <Card className="bg-background">
                         <CardHeader className="flex flex-row items-center justify-between">
                             <div>
                                 <CardTitle className="flex items-center gap-2">

@@ -8,6 +8,7 @@
         "login": "تسجيل الدخول",
         "signup": "إنشاء حساب",
         "profile": "حسابي",
+        "adminDashboard": "لوحة التحكم",
         "logout": "تسجيل الخروج",
         "searchPlaceholder": "ابحث عن منتجات، تصنيفات...",
         "noResults": "لا توجد نتائج.",
@@ -136,6 +137,14 @@
         "noResults": "لا توجد منتجات مطابقة لبحثك",
         "back": "رجوع"
     },
+    "CategoriesPage": {
+        "title": "التصنيفات",
+        "description": "تصفح المنتجات حسب التصنيف",
+        "allCategories": "جميع التصنيفات",
+        "products": "منتجات",
+        "noProducts": "لا توجد منتجات في هذا التصنيف",
+        "viewAllInCategory": "عرض الكل في {category}"
+    },
     "Checkout": {
         "title": "إتمام الشراء",
         "steps": {
@@ -143,8 +152,20 @@
             "payment": "الدفع",
             "review": "المراجعة"
         },
+        "addressSelection": {
+            "title": "عنوان التوصيل",
+            "noAddresses": "ليس لديك عناوين محفوظة بعد",
+            "addAddress": "أضف عنوانك الأول",
+            "addNewAddress": "إضافة عنوان جديد",
+            "default": "الأساسي",
+            "pleaseSelectAddress": "الرجاء اختيار عنوان للتوصيل",
+            "addressCreated": "تم إنشاء العنوان بنجاح",
+            "addressCreateFailed": "فشل إنشاء العنوان"
+        },
         "shipping": {
             "title": "عنوان الشحن",
+            "contactInfo": "معلومات الاتصال",
+            "deliveryTo": "التوصيل إلى",
             "firstName": "الاسم الأول",
             "lastName": "اسم العائلة",
             "email": "البريد الإلكتروني",

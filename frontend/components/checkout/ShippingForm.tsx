@@ -7,33 +7,48 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ShippingData } from "@/app/[locale]/checkout/page"
-import { SaveAddressDialog } from "./SaveAddressDialog"
+import { AddressSelection } from "./AddressSelection"
+import { AddressFormDialog } from "@/components/profile/AddressFormDialog"
 import { Address } from "@/hooks/useUser"
 import { toast } from "sonner"
+import { ArrowLeft } from "lucide-react"
 
 interface ShippingFormProps {
     initialData: ShippingData
-    defaultAddress?: Address | null
+    addresses: Address[]
+    isLoadingAddresses?: boolean
     userEmail?: string | null
-    onSubmit: (data: ShippingData) => void
-    onSaveAddress?: (addressData: Partial<Address>) => Promise<Address | null>
-    existingAddressId?: number | null
+    onSubmit: (data: ShippingData, selectedAddressId?: number) => void
+    onCreateAddress?: (addressData: Partial<Address>) => Promise<Address | null>
+    onRefreshAddresses?: () => void
 }
 
 export function ShippingForm({
     initialData,
-    defaultAddress,
+    addresses,
+    isLoadingAddresses = false,
     userEmail,
     onSubmit,
-    onSaveAddress,
-    existingAddressId,
+    onCreateAddress,
+    onRefreshAddresses,
 }: ShippingFormProps) {
     const t = useTranslations('Checkout')
+
+    const [selectedAddress, setSelectedAddress] = useState<Address | null>(null)
+    const [showAddressForm, setShowAddressForm] = useState(false)
+    const [isSavingAddress, setIsSavingAddress] = useState(false)
     const [formData, setFormData] = useState<ShippingData>(initialData)
-    const [showSaveDialog, setShowSaveDialog] = useState(false)
-    const [isSaving, setIsSaving] = useState(false)
-    const [pendingSubmit, setPendingSubmit] = useState(false)
-    const [hasPrefilledAddress, setHasPrefilledAddress] = useState(false)
+
+    // Pre-select the default address if available
+    useEffect(() => {
+        if (addresses.length > 0 && !selectedAddress) {
+            const defaultAddr = addresses.find(addr => addr.isDefault)
+            if (defaultAddr) {
+                setSelectedAddress(defaultAddr)
+                populateFormFromAddress(defaultAddr)
+            }
+        }
+    }, [addresses])
 
     // Prefill email from user account
     useEffect(() => {
@@ -42,28 +57,59 @@ export function ShippingForm({
         }
     }, [userEmail])
 
-    // Prefill form with default address when available
-    useEffect(() => {
-        if (defaultAddress && !hasPrefilledAddress) {
-            // Parse recipient name into first and last name
-            const nameParts = defaultAddress.recipientName?.split(' ') || []
-            const firstName = nameParts[0] || ''
-            const lastName = nameParts.slice(1).join(' ') || ''
+    const populateFormFromAddress = (address: Address) => {
+        // Parse recipient name into first and last name
+        const nameParts = address.recipientName?.split(' ') || []
+        const firstName = nameParts[0] || ''
+        const lastName = nameParts.slice(1).join(' ') || ''
 
-            setFormData(prev => ({
-                firstName,
-                lastName,
-                email: prev.email || userEmail || '', // Keep email from previous or user account
-                phone: defaultAddress.phoneNumber || '',
-                address: defaultAddress.streetAddress || '',
-                city: defaultAddress.city || '',
-                state: defaultAddress.district || '',
-                zipCode: defaultAddress.postalCode || '',
-                country: 'Saudi Arabia', // Default country
-            }))
-            setHasPrefilledAddress(true)
+        setFormData(prev => ({
+            firstName,
+            lastName,
+            email: prev.email || userEmail || '',
+            phone: address.phoneNumber || '',
+            address: address.streetAddress || '',
+            city: address.city || '',
+            state: address.district || '',
+            zipCode: address.postalCode || '',
+            country: 'Saudi Arabia',
+        }))
+    }
+
+    const handleAddressSelect = (address: Address) => {
+        setSelectedAddress(address)
+        populateFormFromAddress(address)
+    }
+
+    const handleAddNewAddress = () => {
+        setShowAddressForm(true)
+    }
+
+    const handleSaveNewAddress = async (addressData: Partial<Address>) => {
+        if (!onCreateAddress) return
+
+        setIsSavingAddress(true)
+        try {
+            const newAddress = await onCreateAddress(addressData)
+            if (newAddress) {
+                toast.success(t('addressSelection.addressCreated'))
+                setShowAddressForm(false)
+                // Refresh addresses and select the new one
+                if (onRefreshAddresses) {
+                    onRefreshAddresses()
+                }
+                setSelectedAddress(newAddress)
+                populateFormFromAddress(newAddress)
+            } else {
+                toast.error(t('addressSelection.addressCreateFailed'))
+            }
+        } catch (error) {
+            console.error('Failed to create address:', error)
+            toast.error(t('addressSelection.addressCreateFailed'))
+        } finally {
+            setIsSavingAddress(false)
         }
-    }, [defaultAddress, hasPrefilledAddress, userEmail])
+    }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
@@ -73,197 +119,87 @@ export function ShippingForm({
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
 
-        // Check if the address has changed from the default
-        const hasAddressChanged = !defaultAddress ||
-            formData.address !== defaultAddress.streetAddress ||
-            formData.city !== defaultAddress.city ||
-            formData.state !== defaultAddress.district ||
-            formData.zipCode !== defaultAddress.postalCode ||
-            formData.phone !== defaultAddress.phoneNumber
-
-        // If address changed and we can save, show dialog
-        if (hasAddressChanged && onSaveAddress) {
-            setPendingSubmit(true)
-            setShowSaveDialog(true)
-        } else {
-            // No changes or can't save, just submit
-            onSubmit(formData)
-        }
-    }
-
-    const handleSaveConfirm = async () => {
-        if (!onSaveAddress) {
-            proceedWithSubmit()
+        if (!selectedAddress) {
+            toast.error(t('addressSelection.pleaseSelectAddress'))
             return
         }
 
-        setIsSaving(true)
-        try {
-            const addressData: Partial<Address> = {
-                recipientName: `${formData.firstName} ${formData.lastName}`.trim(),
-                streetAddress: formData.address,
-                city: formData.city,
-                district: formData.state,
-                postalCode: formData.zipCode,
-                phoneNumber: formData.phone,
-                isDefault: true,
-            }
-
-            const savedAddress = await onSaveAddress(addressData)
-
-            if (savedAddress) {
-                toast.success(t('saveAddress.success'))
-            } else {
-                toast.error(t('saveAddress.error'))
-            }
-        } catch (error) {
-            console.error('Failed to save address:', error)
-            toast.error(t('saveAddress.error'))
-        } finally {
-            setIsSaving(false)
-            setShowSaveDialog(false)
-            proceedWithSubmit()
-        }
-    }
-
-    const handleSaveCancel = () => {
-        setShowSaveDialog(false)
-        proceedWithSubmit()
-    }
-
-    const proceedWithSubmit = () => {
-        if (pendingSubmit) {
-            setPendingSubmit(false)
-            onSubmit(formData)
-        }
+        onSubmit(formData, selectedAddress.id)
     }
 
     return (
         <>
-            <Card>
-                <CardHeader>
-                    <CardTitle>{t('shipping.title')}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="firstName">{t('shipping.firstName')}</Label>
-                                <Input
-                                    id="firstName"
-                                    name="firstName"
-                                    value={formData.firstName}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="lastName">{t('shipping.lastName')}</Label>
-                                <Input
-                                    id="lastName"
-                                    name="lastName"
-                                    value={formData.lastName}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                        </div>
+            <div className="space-y-6">
+                {/* Address Selection */}
+                <AddressSelection
+                    addresses={addresses}
+                    selectedAddressId={selectedAddress?.id ?? null}
+                    onSelectAddress={handleAddressSelect}
+                    onAddNewAddress={handleAddNewAddress}
+                    isLoading={isLoadingAddresses}
+                />
 
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="email">{t('shipping.email')}</Label>
-                                <Input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="phone">{t('shipping.phone')}</Label>
-                                <Input
-                                    id="phone"
-                                    name="phone"
-                                    type="tel"
-                                    value={formData.phone}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                        </div>
+                {/* Email & Phone form - only if address is selected */}
+                {selectedAddress && (
+                    <Card className="bg-background">
+                        <CardHeader>
+                            <CardTitle>{t('shipping.contactInfo')}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <form onSubmit={handleSubmit} className="space-y-4">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="email">{t('shipping.email')}</Label>
+                                        <Input
+                                            id="email"
+                                            name="email"
+                                            type="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="phone">{t('shipping.phone')}</Label>
+                                        <Input
+                                            id="phone"
+                                            name="phone"
+                                            type="tel"
+                                            value={formData.phone}
+                                            onChange={handleChange}
+                                            required
+                                            disabled
+                                            className="bg-muted"
+                                        />
+                                    </div>
+                                </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="address">{t('shipping.address')}</Label>
-                            <Input
-                                id="address"
-                                name="address"
-                                value={formData.address}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
+                                {/* Summary of selected address */}
+                                <div className="p-4 rounded-lg bg-muted/50 border">
+                                    <p className="text-sm font-medium mb-1">
+                                        {t('shipping.deliveryTo')}
+                                    </p>
+                                    <p className="text-sm text-muted-foreground">
+                                        {selectedAddress.recipientName} • {selectedAddress.streetAddress}, {selectedAddress.city}
+                                    </p>
+                                </div>
 
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="city">{t('shipping.city')}</Label>
-                                <Input
-                                    id="city"
-                                    name="city"
-                                    value={formData.city}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="state">{t('shipping.state')}</Label>
-                                <Input
-                                    id="state"
-                                    name="state"
-                                    value={formData.state}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                        </div>
+                                <Button type="submit" className="w-full" size="lg">
+                                    {t('shipping.continue')}
+                                </Button>
+                            </form>
+                        </CardContent>
+                    </Card>
+                )}
+            </div>
 
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="zipCode">{t('shipping.zipCode')}</Label>
-                                <Input
-                                    id="zipCode"
-                                    name="zipCode"
-                                    value={formData.zipCode}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="country">{t('shipping.country')}</Label>
-                                <Input
-                                    id="country"
-                                    name="country"
-                                    value={formData.country}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                        </div>
-
-                        <Button type="submit" className="w-full" size="lg">
-                            {t('shipping.continue')}
-                        </Button>
-                    </form>
-                </CardContent>
-            </Card>
-
-            <SaveAddressDialog
-                open={showSaveDialog}
-                onOpenChange={setShowSaveDialog}
-                onConfirm={handleSaveConfirm}
-                onCancel={handleSaveCancel}
-                isLoading={isSaving}
+            {/* Add New Address Dialog */}
+            <AddressFormDialog
+                open={showAddressForm}
+                onOpenChange={setShowAddressForm}
+                address={null}
+                onSave={handleSaveNewAddress}
+                isSaving={isSavingAddress}
             />
         </>
     )

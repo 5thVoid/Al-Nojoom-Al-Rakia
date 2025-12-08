@@ -13,7 +13,7 @@ import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher"
 
 export function Navbar() {
     const t = useTranslations('Navbar')
-    const { isAuthenticated, logout } = useAuth()
+    const { isAuthenticated, logout, user } = useAuth()
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-border/5 bg-background/60 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
@@ -53,6 +53,13 @@ export function Navbar() {
                     >
                         {t('categories')}
                     </Link>
+                    {isAuthenticated && user?.role === 'admin' && (
+                        <Link
+                            href="/admin-dashboard"
+                        >
+                            {t('adminDashboard')}
+                        </Link>
+                    )}
                 </nav>
 
                 {/* Right: Actions */}
