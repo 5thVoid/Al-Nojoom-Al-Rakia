@@ -11,7 +11,7 @@ import {
     FolderTree,
     Factory,
     Boxes,
-    LogIn,
+    LogOut,
     Store,
     ChevronLeft,
     ChevronRight,
@@ -34,12 +34,14 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useAuth } from "@/context/AuthContext"
 
 interface NavItem {
     href: string
     label: string
     icon: React.ComponentType<{ className?: string }>
     external?: boolean
+    onClick?: () => void
 }
 
 interface AdminSidebarProps {
@@ -51,6 +53,7 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
     const pathname = usePathname()
     const [isCollapsed, setIsCollapsed] = React.useState(false)
     const [isMobileOpen, setIsMobileOpen] = React.useState(false)
+    const { logout } = useAuth()
 
     const mainNavItems: NavItem[] = [
         { href: "/profile", label: t("profile"), icon: User },
@@ -63,7 +66,6 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
     ]
 
     const secondaryNavItems: NavItem[] = [
-        { href: "/auth/login", label: t("login"), icon: LogIn },
         { href: "/", label: t("backToStore"), icon: Store },
     ]
 
@@ -84,20 +86,36 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
         const active = isActive(item.href)
         const Icon = item.icon
 
-        const linkContent = (
+        const linkContent = item.onClick ? (
+            <button
+                onClick={() => {
+                    item.onClick?.()
+                    setIsMobileOpen(false)
+                }}
+                className={cn(
+                    "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
+                    "hover:bg-primary hover:text-sidebar-primary-foreground",
+                    "text-sidebar-foreground",
+                    !showLabel && "justify-center px-2"
+                )}
+            >
+                <Icon className={cn("h-5 w-5 shrink-0")} />
+                {showLabel && <span className="truncate">{item.label}</span>}
+            </button>
+        ) : (
             <Link
                 href={item.href}
                 onClick={() => setIsMobileOpen(false)}
                 className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
-                    "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                    "hover:bg-primary hover:text-sidebar-primary-foreground",
                     active
-                        ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
-                        : "text-sidebar-foreground/80",
+                        ? "bg-accent text-sidebar-accent-foreground shadow-sm"
+                        : "text-sidebar-foreground",
                     !showLabel && "justify-center px-2"
                 )}
             >
-                <Icon className={cn("h-5 w-5 shrink-0", active && "text-current")} />
+                <Icon className={cn("h-5 w-5 shrink-0")} />
                 {showLabel && <span className="truncate">{item.label}</span>}
             </Link>
         )
@@ -106,7 +124,7 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
             return (
                 <Tooltip>
                     <TooltipTrigger asChild>{linkContent}</TooltipTrigger>
-                    <TooltipContent side="right" className="font-medium">
+                    <TooltipContent side="right" className="font-medium bg-popover text-popover-foreground border-border">
                         {item.label}
                     </TooltipContent>
                 </Tooltip>
@@ -130,8 +148,8 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
                         {t("adminPanel")}
                     </h2>
                 ) : (
-                    <div className="h-8 w-8 rounded-lg bg-sidebar-primary/10 flex items-center justify-center">
-                        <span className="text-sm font-bold text-sidebar-foreground">A</span>
+                    <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <span className="text-sm font-bold text-primary">A</span>
                     </div>
                 )}
             </div>
@@ -161,6 +179,17 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
                                 showLabel={!collapsed}
                             />
                         ))}
+
+                        {/* Logout Button */}
+                        <NavLink
+                            item={{
+                                href: "#",
+                                label: t("logout"),
+                                icon: LogOut,
+                                onClick: logout
+                            }}
+                            showLabel={!collapsed}
+                        />
                     </div>
                 </TooltipProvider>
             </nav>
@@ -173,7 +202,7 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
                 )}
             >
                 {!collapsed && (
-                    <p className="text-xs text-sidebar-foreground/50">
+                    <p className="text-xs text-muted-foreground">
                         © {new Date().getFullYear()} Al-Nojoom
                     </p>
                 )}
@@ -189,7 +218,7 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
                     <Button
                         variant="outline"
                         size="icon"
-                        className="fixed top-4 start-4 z-50 lg:hidden bg-background/80 backdrop-blur-sm border-border shadow-md"
+                        className="fixed top-4 start-4 z-50 lg:hidden bg-background/95 backdrop-blur-sm border-border shadow-md hover:bg-accent hover:text-accent-foreground"
                     >
                         <Menu className="h-5 w-5" />
                         <span className="sr-only">{t("openMenu")}</span>
@@ -238,7 +267,7 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
                                 </span>
                             </Button>
                         </TooltipTrigger>
-                        <TooltipContent side="right">
+                        <TooltipContent side="right" className="bg-popover text-popover-foreground border-border">
                             {isCollapsed ? t("expandSidebar") : t("collapseSidebar")}
                         </TooltipContent>
                     </Tooltip>

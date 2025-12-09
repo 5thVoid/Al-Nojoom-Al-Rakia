@@ -49,7 +49,7 @@ export function AddressSelection({
     }
 
     return (
-        <Card className="bg-background">
+        <Card className="bg-card">
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
                     <MapPin className="h-5 w-5" />
@@ -105,7 +105,7 @@ function SelectableAddressCard({ address, isSelected, onSelect }: SelectableAddr
     return (
         <Card
             className={cn(
-                "relative cursor-pointer bg-background transition-all hover:border-primary/50",
+                "relative cursor-pointer bg-card transition-all hover:border-primary/50",
                 isSelected && "ring-2 ring-primary border-primary bg-primary/5"
             )}
             onClick={onSelect}

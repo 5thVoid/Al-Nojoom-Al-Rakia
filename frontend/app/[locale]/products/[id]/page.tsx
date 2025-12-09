@@ -184,7 +184,7 @@ export default function ProductPage() {
 
                 {/* Product Details Card */}
                 <div className="space-y-6">
-                    <Card className="bg-background">
+                    <Card className="bg-card">
                         <CardHeader>
                             <div className="flex items-start justify-between gap-4">
                                 <div className="space-y-2">
@@ -244,7 +244,7 @@ export default function ProductPage() {
                     </Card>
 
                     {/* Additional Info Card */}
-                    <Card className="bg-background">
+                    <Card className="bg-card">
                         <CardHeader>
                             <CardTitle className="text-lg">{t('productInfo')}</CardTitle>
                         </CardHeader>

@@ -2,7 +2,7 @@ import { useTranslations } from 'next-intl'
 
 export default function AdminDashboard() {
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 px-24 bg-background">
             <div className="space-y-2">
                 <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
                 <p className="text-muted-foreground">

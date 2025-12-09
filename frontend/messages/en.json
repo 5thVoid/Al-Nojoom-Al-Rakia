@@ -53,7 +53,18 @@
         "pobox": "P.O.Box: 6331 Unit No. 5 - Riyadh : 12211 - 3636",
         "contacts": "Tel: 0502780097 - Fax: 4626724",
         "vat": "VAT NO: 312243879200003",
-        "rights": "All rights reserved © 2025 Al-Nojoom Al-Rakia"
+        "rights": "All rights reserved © 2025 Al-Nojoom Al-Rakia",
+        "complianceLinks": "Compliance",
+        "quickLinks": "Quick Links",
+        "returnsExchanges": "Returns & Exchanges",
+        "termsConditions": "Terms & Conditions",
+        "privacyPolicy": "Privacy Policy",
+        "aboutUs": "About Us",
+        "warrantyMaintenance": "Warranty & Maintenance",
+        "home": "Home",
+        "products": "Products",
+        "categories": "Categories",
+        "profile": "Profile"
     },
     "Auth": {
         "loginTitle": "Welcome back",
@@ -283,6 +294,228 @@
             "setDefaultFailed": "Failed to set default address"
         }
     },
+    "ReturnsExchanges": {
+        "title": "Returns & Exchanges Policy",
+        "subtitle": "We want you to be completely satisfied with your purchase. Please review our policy below.",
+        "back": "Back to Home",
+        "returnPolicy": {
+            "title": "Return Policy",
+            "intro": "We accept returns within 14 days of delivery for most products. Items must be in their original condition with all packaging and accessories.",
+            "eligibleTitle": "Eligible for Return",
+            "eligible1": "Product is in original, unused condition",
+            "eligible2": "All original packaging, accessories, and documentation included",
+            "eligible3": "Return initiated within 14 days of delivery",
+            "eligible4": "Product has not been damaged or modified",
+            "nonEligibleTitle": "Not Eligible for Return",
+            "nonEligible1": "Software products that have been opened or activated",
+            "nonEligible2": "Custom-built or special-order items",
+            "nonEligible3": "Products damaged due to misuse or improper installation"
+        },
+        "exchangePolicy": {
+            "title": "Exchange Policy",
+            "intro": "We offer exchanges for defective products or if you received the wrong item. Exchanges are subject to product availability.",
+            "processTitle": "Exchange Process",
+            "step1": "Contact our customer service within 14 days of delivery",
+            "step2": "Provide your order number and reason for exchange",
+            "step3": "Ship the item back in its original packaging",
+            "step4": "Receive your replacement item once we process your exchange"
+        },
+        "timeline": {
+            "title": "Processing Timeline",
+            "days": "{days} Days",
+            "returnWindowTitle": "Return Window",
+            "returnWindowDesc": "You have 14 days from delivery to initiate a return or exchange",
+            "processingTitle": "Processing Time",
+            "processingDesc": "Returns are inspected and processed within 3-5 business days",
+            "refundTitle": "Refund Timeline",
+            "refundDesc": "Refunds are issued to your original payment method within 7-10 business days"
+        },
+        "contact": {
+            "title": "Need Help?",
+            "description": "If you have any questions about returns or exchanges, please contact our customer service team or view your order history.",
+            "viewOrders": "View My Orders"
+        }
+    },
+    "TermsConditions": {
+        "title": "Terms & Conditions",
+        "subtitle": "Please read these terms and conditions carefully before using our services.",
+        "lastUpdated": "Last updated: January 2025",
+        "back": "Back to Home",
+        "acceptance": {
+            "title": "Acceptance of Terms",
+            "content1": "By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.",
+            "content2": "We reserve the right to modify these terms at any time. Your continued use of the website following any changes constitutes acceptance of those changes."
+        },
+        "useOfServices": {
+            "title": "Use of Services",
+            "intro": "When you create an account with us, you must provide accurate, complete, and current information. Failure to do so constitutes a breach of the Terms.",
+            "rulesTitle": "You agree not to:",
+            "rule1": "Use the service for any illegal purpose or to violate any laws",
+            "rule2": "Attempt to gain unauthorized access to any portion of the website",
+            "rule3": "Interfere with or disrupt the service or servers",
+            "rule4": "Impersonate any person or entity or misrepresent your affiliation"
+        },
+        "products": {
+            "title": "Products and Orders",
+            "content1": "All product descriptions, images, and pricing are subject to change without notice. We reserve the right to limit quantities and discontinue products.",
+            "content2": "We make every effort to display product colors and images as accurately as possible. However, we cannot guarantee that your device's display will accurately reflect the actual product color.",
+            "content3": "Prices are subject to change without notice. We reserve the right to refuse or cancel any order for any reason."
+        },
+        "intellectual": {
+            "title": "Intellectual Property",
+            "content1": "The service and its original content, features, and functionality are owned by Al-Nojoom Al-Rakia and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.",
+            "content2": "You may not reproduce, distribute, modify, create derivative works of, publicly display, or exploit any of our content without our express written permission."
+        },
+        "liability": {
+            "title": "Limitation of Liability",
+            "content": "In no event shall Al-Nojoom Al-Rakia, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses."
+        },
+        "contact": {
+            "title": "Questions About Terms?",
+            "description": "If you have any questions about these Terms and Conditions, please contact our customer service team."
+        }
+    },
+    "PrivacyPolicy": {
+        "title": "Privacy Policy",
+        "subtitle": "Your privacy is important to us. This policy outlines how we collect, use, and protect your information.",
+        "lastUpdated": "Last updated: January 2025",
+        "back": "Back to Home",
+        "collection": {
+            "title": "Information We Collect",
+            "intro": "We collect information that you provide directly to us, including:",
+            "typesTitle": "Types of Information",
+            "type1": "Personal information (name, email address, phone number)",
+            "type2": "Billing and shipping addresses",
+            "type3": "Payment information (processed securely through our payment providers)",
+            "type4": "Order history and preferences"
+        },
+        "usage": {
+            "title": "How We Use Your Information",
+            "intro": "We use the information we collect to:",
+            "purpose1": "Process and fulfill your orders",
+            "purpose2": "Communicate with you about your orders and account",
+            "purpose3": "Send you marketing communications (with your consent)",
+            "purpose4": "Improve our products and services",
+            "purpose5": "Detect and prevent fraud and abuse"
+        },
+        "protection": {
+            "title": "Data Protection",
+            "content1": "We implement appropriate technical and organizational measures to protect your personal information against unauthorized or unlawful processing, accidental loss, destruction, or damage.",
+            "content2": "We use industry-standard SSL encryption to protect sensitive information transmitted online. However, no method of transmission over the Internet is 100% secure."
+        },
+        "rights": {
+            "title": "Your Rights",
+            "intro": "You have the right to:",
+            "right1": "Access the personal information we hold about you",
+            "right2": "Request correction of inaccurate information",
+            "right3": "Request deletion of your personal information",
+            "right4": "Object to processing of your personal information"
+        },
+        "cookies": {
+            "title": "Cookies and Tracking",
+            "content": "We use cookies and similar tracking technologies to track activity on our website and store certain information. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent."
+        },
+        "contact": {
+            "title": "Privacy Questions?",
+            "description": "If you have any questions about this Privacy Policy, please contact our customer service team."
+        }
+    },
+    "AboutUs": {
+        "title": "About Us",
+        "subtitle": "Leading provider of computer hardware and networking solutions in Saudi Arabia",
+        "back": "Back to Home",
+        "overview": {
+            "title": "Company Overview",
+            "content1": "Nojoom Al Raqia for Trading Co. is a leading provider of computer hardware, accessories, cabinets, and networking solutions in Saudi Arabia. Established with a vision to deliver excellence in technology solutions, we have been serving businesses and individuals with premium quality products.",
+            "content2": "Located in the heart of Riyadh at Olaya - Al-khaleej Computer Group, we pride ourselves on offering a comprehensive range of products from the world's leading manufacturers. Our commitment to quality and customer satisfaction has made us a trusted name in the industry.",
+            "content3": "With years of experience in the technology sector, we understand the evolving needs of our customers and continuously update our product portfolio to include the latest innovations in computer hardware and networking equipment."
+        },
+        "mission": {
+            "title": "Our Mission",
+            "content": "To provide high-quality computer hardware and networking solutions that empower businesses and individuals to achieve their technological goals, while maintaining the highest standards of customer service and support."
+        },
+        "vision": {
+            "title": "Our Vision",
+            "content": "To be the most trusted and preferred destination for computer hardware and networking solutions in Saudi Arabia, recognized for our product quality, expertise, and exceptional customer experience."
+        },
+        "values": {
+            "title": "Our Values",
+            "value1Title": "Quality First",
+            "value1Desc": "We source only genuine products from authorized distributors and manufacturers, ensuring the highest quality standards.",
+            "value2Title": "Customer Focus",
+            "value2Desc": "Our customers are at the heart of everything we do. We strive to exceed expectations with every interaction.",
+            "value3Title": "Integrity",
+            "value3Desc": "We conduct business with honesty, transparency, and ethical practices in all our dealings."
+        },
+        "whyUs": {
+            "title": "Why Choose Us",
+            "reason1": "Extensive product range from leading global manufacturers",
+            "reason2": "Competitive pricing and flexible payment options",
+            "reason3": "Expert technical support and consultation",
+            "reason4": "Fast and reliable delivery across Saudi Arabia"
+        },
+        "contact": {
+            "title": "Ready to Get Started?",
+            "description": "Explore our extensive range of products and discover how we can help you with your technology needs.",
+            "browseProducts": "Browse Products"
+        }
+    },
+    "WarrantyMaintenance": {
+        "title": "Warranty & Maintenance",
+        "subtitle": "Comprehensive warranty coverage and maintenance services for your peace of mind.",
+        "back": "Back to Home",
+        "warranty": {
+            "title": "Warranty Coverage",
+            "intro": "We stand behind the quality of our products. All items purchased from Al-Nojoom Al-Rakia come with warranty protection.",
+            "coveredTitle": "What's Covered",
+            "covered1": "Manufacturing defects in materials and workmanship",
+            "covered2": "Hardware failures under normal use conditions",
+            "covered3": "Component malfunctions not caused by user error",
+            "covered4": "Performance issues related to product specifications",
+            "notCoveredTitle": "What's Not Covered",
+            "notCovered1": "Damage from accidents, misuse, or improper installation",
+            "notCovered2": "Normal wear and tear or cosmetic damage",
+            "notCovered3": "Damage from unauthorized repairs or modifications",
+            "notCovered4": "Software issues or data loss"
+        },
+        "period": {
+            "title": "Warranty Periods",
+            "standard": "1 Year",
+            "standardTitle": "Standard Warranty",
+            "standardDesc": "Most products include a 1-year manufacturer warranty from the date of purchase.",
+            "extended": "2-3 Years",
+            "extendedTitle": "Extended Warranty",
+            "extendedDesc": "Premium products may include extended warranty coverage up to 3 years.",
+            "manufacturer": "Varies",
+            "manufacturerTitle": "Manufacturer Warranty",
+            "manufacturerDesc": "Some products carry specific manufacturer warranty terms. Please check product details."
+        },
+        "maintenance": {
+            "title": "Maintenance Services",
+            "intro": "We offer comprehensive maintenance services to keep your equipment running at peak performance.",
+            "servicesTitle": "Our Services Include",
+            "service1": "Regular system diagnostics and health checks",
+            "service2": "Hardware cleaning and optimization",
+            "service3": "Component replacement and upgrades",
+            "service4": "Performance tuning and configuration",
+            "service5": "Preventive maintenance programs"
+        },
+        "claim": {
+            "title": "How to Claim Warranty",
+            "processTitle": "Warranty Claim Process",
+            "step1": "Contact our customer service with your order number and product details",
+            "step2": "Describe the issue and provide any relevant photos or documentation",
+            "step3": "Our technical team will assess the claim and provide instructions",
+            "step4": "Ship the product to our service center (if required)",
+            "step5": "Receive your repaired or replaced product within the specified timeframe"
+        },
+        "contact": {
+            "title": "Need Warranty Support?",
+            "description": "Our warranty and maintenance team is here to help. Contact us for any warranty claims or maintenance inquiries.",
+            "phone": "Tel: 0502780097",
+            "hours": "Sunday - Thursday: 9:00 AM - 6:00 PM"
+        }
+    },
     "AdminSidebar": {
         "adminPanel": "Admin Panel",
         "profile": "Profile",
@@ -293,6 +526,7 @@
         "manufacturers": "Manufacturers",
         "productTypes": "Product Types",
         "login": "Login",
+        "logout": "Logout",
         "backToStore": "Back to Store",
         "openMenu": "Open menu",
         "expandSidebar": "Expand sidebar",

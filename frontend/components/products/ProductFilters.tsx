@@ -120,7 +120,7 @@ export function ProductFilters({
 
     return (
         <aside className={`${isVisible ? 'block' : 'hidden'} md:block w-full md:w-64 space-y-6 ${className}`}>
-            <Card className="my-9 bg-background">
+            <Card className="my-9 bg-card">
                 <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle className="text-lg">{t('filters')}</CardTitle>
                     <Button

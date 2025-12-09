@@ -126,7 +126,7 @@ export default function CategoriesPage() {
                     {isLoadingProducts ? (
                         <ProductsGridSkeleton count={6} variant="compact" />
                     ) : products.length === 0 ? (
-                        <Card className="bg-background">
+                        <Card className="bg-card">
                             <CardContent className="py-12 text-center">
                                 <p className="text-muted-foreground">{t('noProducts')}</p>
                             </CardContent>

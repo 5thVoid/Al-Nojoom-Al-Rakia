@@ -141,7 +141,7 @@ export function ShippingForm({
 
                 {/* Email & Phone form - only if address is selected */}
                 {selectedAddress && (
-                    <Card className="bg-background">
+                    <Card className="bg-card">
                         <CardHeader>
                             <CardTitle>{t('shipping.contactInfo')}</CardTitle>
                         </CardHeader>

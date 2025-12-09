@@ -21,7 +21,7 @@ export function Navbar() {
                 {/* Left: Logo */}
                 <div className="flex items-center md:px-24">
                     <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-90">
-                        <div className="relative h-28 w-28 overflow-hidden rounded-lg">
+                        <div className="relative h-14 w-14 overflow-hidden rounded-lg">
                             <Image
                                 src="/Logo.png"
                                 alt="Al-Nojoom Logo"
@@ -38,23 +38,23 @@ export function Navbar() {
 
                 {/* Middle: Nav Items */}
                 <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
-                    <Link
+                    <Link className="hover:text-primary hover:scale-105 duration-200 transition-all"
                         href="/"
                     >
                         {t('home')}
                     </Link>
-                    <Link
+                    <Link className="hover:text-primary hover:scale-105 duration-200 transition-all"
                         href="/products"
                     >
                         {t('products')}
                     </Link>
-                    <Link
+                    <Link className="hover:text-primary hover:scale-105 duration-200 transition-all"
                         href="/categories"
                     >
                         {t('categories')}
                     </Link>
                     {isAuthenticated && user?.role === 'admin' && (
-                        <Link
+                        <Link className="hover:text-primary hover:scale-105 duration-200 transition-all"
                             href="/admin"
                         >
                             {t('adminDashboard')}

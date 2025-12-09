@@ -101,7 +101,7 @@ export function CategoriesGrid({
                                 "cursor-pointer transition-all hover:shadow-lg duration-300",
                                 selectedCategoryId === category.id
                                     ? "border-primary bg-primary/5 shadow-md ring-2 ring-primary"
-                                    : "hover:border-primary/50 bg-background"
+                                    : "hover:border-primary/50 bg-card"
                             )}
                             onClick={() => handleCategoryClick(category.id)}
                         >
@@ -127,7 +127,7 @@ export function CategoriesGrid({
                 <Card
                     key={category.id}
                     className={cn(
-                        "cursor-pointer transition-all hover:border-primary/50 bg-background",
+                        "cursor-pointer transition-all hover:border-primary/50 bg-card",
                         selectedCategoryId === category.id &&
                         "ring-2 ring-primary border-primary bg-primary/5"
                     )}

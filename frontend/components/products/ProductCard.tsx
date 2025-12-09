@@ -181,7 +181,7 @@ export function ProductCard({
     )
 
     const cardClasses = cn(
-        "flex flex-col bg-background hover:shadow-lg transition-shadow duration-300",
+        "flex flex-col bg-card hover:shadow-lg transition-shadow duration-300",
         clickable && "cursor-pointer",
         className
     )
@@ -249,7 +249,7 @@ export function ProductCardCompact({
 
     return (
         <Card className={cn(
-            "group overflow-hidden bg-background hover:shadow-lg transition-shadow",
+            "group overflow-hidden bg-card hover:shadow-lg transition-shadow",
             className
         )}>
             <Link href={`/products/${product.id}`}>
