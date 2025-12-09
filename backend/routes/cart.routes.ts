@@ -16,6 +16,9 @@ router.get("/count", cartController.getItemCount);
 // Validate cart stock before checkout
 router.get("/validate", cartController.validateCart);
 
+// Checkout and create order
+router.post("/checkout", cartController.checkout);
+
 // Add item to cart
 router.post("/items", cartController.addItem);
 

@@ -8,6 +8,7 @@ import {
 } from "sequelize";
 import sequelize from "../config/database";
 import Product from "./Product";
+import Order from "./Order";
 
 class OrderItem extends Model<
   InferAttributes<OrderItem>,
@@ -15,6 +16,7 @@ class OrderItem extends Model<
 > {
   declare id: CreationOptional<number>;
   declare productId: ForeignKey<Product["id"]>;
+  declare orderId: CreationOptional<ForeignKey<Order["id"]> | null>;
   declare quantity: number;
   declare priceAtPurchase: number;
   declare createdAt: CreationOptional<Date>;
@@ -29,6 +31,15 @@ OrderItem.init(
       field: "product_id",
       references: {
         model: "products",
+        key: "id",
+      },
+    },
+    orderId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      field: "order_id",
+      references: {
+        model: "orders",
         key: "id",
       },
     },

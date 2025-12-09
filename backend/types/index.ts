@@ -9,6 +9,7 @@ import Cart from "./Cart";
 import CartItem from "./CartItem";
 import UserAddress from "./UserAddress";
 import OrderItem from "./OrderItem";
+import Order from "./Order";
 
 const initAssociations = () => {
   // Recursive Category Logic
@@ -41,6 +42,12 @@ const initAssociations = () => {
   // Order Item Relationships (for sales tracking)
   Product.hasMany(OrderItem, { foreignKey: "productId" });
   OrderItem.belongsTo(Product, { foreignKey: "productId" });
+
+  // Order relationships
+  User.hasMany(Order, { foreignKey: "userId", as: "orders", onDelete: "CASCADE" });
+  Order.belongsTo(User, { foreignKey: "userId", as: "user" });
+  Order.hasMany(OrderItem, { foreignKey: "orderId", as: "items", onDelete: "CASCADE" });
+  OrderItem.belongsTo(Order, { foreignKey: "orderId", as: "order" });
 };
 
 // Run associations immediately
@@ -57,5 +64,6 @@ export {
   Cart,
   CartItem,
   UserAddress,
-  OrderItem
+  OrderItem,
+  Order
 };

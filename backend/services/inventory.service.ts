@@ -25,7 +25,11 @@ export class InventoryService {
   }
 
   // User: Buy Item (also tracks sale in order_items)
-  async decreaseStock(productId: number, quantity: number) {
+  async decreaseStock(
+    productId: number,
+    quantity: number,
+    options: { orderId?: number } = {}
+  ) {
     const t = await sequelize.transaction();
     try {
       // Get product price before decrementing
@@ -47,6 +51,7 @@ export class InventoryService {
           productId,
           quantity,
           priceAtPurchase: product.price,
+          orderId: options.orderId,
         },
         { transaction: t }
       );

@@ -17,7 +17,12 @@ export class BaseService<T extends Model> {
   async getAll(
     page: number = 1,
     limit: number = 10,
-    options: { where?: WhereOptions<T>; include?: any; order?: any } = {}
+    options: {
+      where?: WhereOptions<T>;
+      include?: any;
+      order?: any;
+      attributes?: any;
+    } = {}
   ) {
     const offset = (page - 1) * limit;
 
@@ -27,6 +32,7 @@ export class BaseService<T extends Model> {
       offset,
       // Default order to ensure consistent pagination (e.g., by ID descending)
       order: options.order || [["id", "DESC"]],
+      attributes: options.attributes,
     });
 
     return {

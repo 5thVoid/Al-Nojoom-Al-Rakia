@@ -17,6 +17,14 @@ ac.grant("admin")
   .createAny("product")
   .updateAny("product")
   .deleteAny("product")
-  .updateAny("inventory"); // For restocking
+  .updateAny("inventory")
+  .readAny("user")
+  .createAny("user")
+  .updateAny("user")
+  .deleteAny("user")
+  .readAny("order")
+  .updateAny("order")
+  .deleteAny("order")
+  .readAny("orderAnalytics");
 
 export default ac;

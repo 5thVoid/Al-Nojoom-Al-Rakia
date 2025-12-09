@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { cartService } from "../services/cart.service";
+import { orderService } from "../services/order.service";
 
 export class CartController {
   /**
@@ -175,6 +176,26 @@ export class CartController {
         message: "All items have sufficient stock",
       });
     } catch (err) {
+      next(err);
+    }
+  };
+
+  /**
+   * POST /cart/checkout
+   * Convert cart into an order
+   */
+  checkout = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = (req.user as any).id;
+      const order = await orderService.checkout(userId);
+      res.status(201).json({ message: "Order created", order });
+    } catch (err: any) {
+      if (err.message === "Cart is empty") {
+        return res.status(400).json({ error: err.message });
+      }
+      if (err.message?.startsWith("Insufficient stock")) {
+        return res.status(400).json({ error: err.message });
+      }
       next(err);
     }
   };
