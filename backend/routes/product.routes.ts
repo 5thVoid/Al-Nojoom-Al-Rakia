@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { ProductController } from "../controllers/product.controller";
 import { authenticate, authorize } from "../middleware/auth.middleware";
+import { singleImageUpload } from "../middleware/upload.middleware";
 
 const router = Router();
 const controller = new ProductController();
@@ -14,6 +15,7 @@ router.post(
   "/",
   authenticate,
   authorize("createAny", "product"),
+  singleImageUpload("image"),
   controller.create
 );
 
@@ -21,6 +23,7 @@ router.put(
   "/:id",
   authenticate,
   authorize("updateAny", "product"),
+  singleImageUpload("image"),
   controller.update
 );
 

@@ -422,13 +422,30 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Storage\",\n    \"slug\": \"storage\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Storage",
+									"type": "text"
+								},
+								{
+									"key": "slug",
+									"value": "storage",
+									"type": "text"
+								},
+								{
+									"key": "parentId",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": ""
 								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{base_url}}/categories",
@@ -458,13 +475,20 @@
 						"method": "PUT",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Storage Devices\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Storage Devices",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "",
+									"disabled": true
 								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{base_url}}/categories/1",
@@ -593,13 +617,18 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Samsung 990 Pro 1TB\",\n    \"sku\": \"SAMS-990-1TB\",\n    \"price\": 129.99,\n    \"manufacturerId\": 1,\n    \"categoryId\": 1,\n    \"productTypeId\": 1,\n    \"initialStock\": 20,\n    \"specs\": {\n        \"capacity\": \"1TB\",\n        \"interface\": \"PCIe 4.0\",\n        \"read_speed\": \"7450 MB/s\"\n    }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							"mode": "formdata",
+							"formdata": [
+								{ "key": "name", "value": "Samsung 990 Pro 1TB", "type": "text" },
+								{ "key": "sku", "value": "SAMS-990-1TB", "type": "text" },
+								{ "key": "price", "value": "129.99", "type": "text" },
+								{ "key": "manufacturerId", "value": "1", "type": "text" },
+								{ "key": "categoryId", "value": "1", "type": "text" },
+								{ "key": "productTypeId", "value": "1", "type": "text" },
+								{ "key": "initialStock", "value": "20", "type": "text" },
+								{ "key": "specs", "value": "{\n  \"capacity\": \"1TB\",\n  \"interface\": \"PCIe 4.0\",\n  \"read_speed\": \"7450 MB/s\"\n}", "type": "text" },
+								{ "key": "image", "type": "file", "src": "" }
+							]
 						},
 						"url": {
 							"raw": "{{base_url}}/products",
@@ -629,13 +658,11 @@
 						"method": "PUT",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"price\": 119.99\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							"mode": "formdata",
+							"formdata": [
+								{ "key": "price", "value": "119.99", "type": "text" },
+								{ "key": "image", "type": "file", "src": "", "disabled": true }
+							]
 						},
 						"url": {
 							"raw": "{{base_url}}/products/1",

@@ -10,6 +10,11 @@ import {
 } from "../types";
 import sequelize from "../config/database";
 import { Op } from "sequelize";
+import {
+  uploadImageBuffer,
+  deleteImageByPublicId,
+  type UploadedFile,
+} from "../utils/cloudinary";
 
 export class ProductService extends BaseService<Product> {
   constructor() {
@@ -70,10 +75,21 @@ export class ProductService extends BaseService<Product> {
   }
 
   // Override Create to handle Inventory Transaction
-  async createWithStock(data: any, initialStock: number) {
+  async createWithStock(
+    data: any,
+    initialStock: number,
+    file?: UploadedFile
+  ) {
     const t = await sequelize.transaction();
     try {
-      const product = await Product.create(data, { transaction: t });
+      const payload = { ...data };
+      if (file) {
+        const asset = await uploadImageBuffer(file, "products");
+        payload.imageUrl = asset.url;
+        payload.imagePublicId = asset.publicId;
+      }
+
+      const product = await Product.create(payload, { transaction: t });
 
       await Inventory.create(
         {
@@ -90,6 +106,21 @@ export class ProductService extends BaseService<Product> {
       await t.rollback();
       throw error;
     }
+  }
+
+  async updateWithImage(id: number, data: any, file?: UploadedFile) {
+    const product = await Product.findByPk(id);
+    if (!product) return null;
+
+    const payload = { ...data };
+    if (file) {
+      await deleteImageByPublicId(product.imagePublicId);
+      const asset = await uploadImageBuffer(file, "products");
+      payload.imageUrl = asset.url;
+      payload.imagePublicId = asset.publicId;
+    }
+
+    return await product.update(payload);
   }
 
   // Override GetById to include details from the optimized view
@@ -145,6 +176,8 @@ export class ProductService extends BaseService<Product> {
         "manufacturerId",
         "productTypeId",
         "stockStatusOverride",
+        [sequelize.col("Product.image_url"), "imageUrl"],
+        [sequelize.col("Product.image_public_id"), "imagePublicId"],
         [
           sequelize.literal(`
             CASE 
@@ -277,6 +310,8 @@ export class ProductService extends BaseService<Product> {
           manufacturerId: productData.manufacturerId,
           productTypeId: productData.productTypeId,
           stockStatusOverride: productData.stockStatusOverride,
+          imageUrl: productData.imageUrl,
+          imagePublicId: productData.imagePublicId,
           quantity: productData.Inventory?.quantity || 0,
           stockLabel: productData.stockLabel,
           isPurchasable: productData.isPurchasable,

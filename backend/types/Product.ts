@@ -23,6 +23,8 @@ class Product extends Model<
   declare stockStatusOverride: CreationOptional<
     "pre_order" | "discontinued" | null
   >;
+  declare imageUrl: CreationOptional<string | null>;
+  declare imagePublicId: CreationOptional<string | null>;
 
   // Foreign Keys
   declare manufacturerId: ForeignKey<Manufacturer["id"]>;
@@ -44,6 +46,12 @@ Product.init(
         "call_for_availability"
       ),
       allowNull: true,
+    },
+    imageUrl: { type: DataTypes.STRING, allowNull: true, field: "image_url" },
+    imagePublicId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: "image_public_id",
     },
   },
   { sequelize, tableName: "products" }

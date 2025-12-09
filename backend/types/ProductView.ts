@@ -24,6 +24,8 @@ class ProductDisplayView extends Model<
   declare isPurchasable: boolean;
   declare isBestSelling: boolean;
   declare salesCount30d: number;
+  declare imageUrl: string | null;
+  declare imagePublicId: string | null;
 }
 
 ProductDisplayView.init(
@@ -41,6 +43,8 @@ ProductDisplayView.init(
     isPurchasable: { type: DataTypes.BOOLEAN, field: "is_purchasable" },
     isBestSelling: { type: DataTypes.BOOLEAN, field: "is_best_selling" },
     salesCount30d: { type: DataTypes.INTEGER, field: "sales_count_30d" },
+    imageUrl: { type: DataTypes.STRING, field: "image_url" },
+    imagePublicId: { type: DataTypes.STRING, field: "image_public_id" },
   },
   {
     sequelize,

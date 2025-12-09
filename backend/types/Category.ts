@@ -16,6 +16,8 @@ class Category extends Model<
   declare name: string;
   declare slug: string;
   declare parentId: CreationOptional<ForeignKey<number> | null>;
+  declare imageUrl: CreationOptional<string | null>;
+  declare imagePublicId: CreationOptional<string | null>;
 }
 
 Category.init(
@@ -24,6 +26,12 @@ Category.init(
     name: { type: DataTypes.STRING, allowNull: false },
     slug: { type: DataTypes.STRING, unique: true, allowNull: false },
     parentId: { type: DataTypes.INTEGER, allowNull: true },
+    imageUrl: { type: DataTypes.STRING, allowNull: true, field: "image_url" },
+    imagePublicId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: "image_public_id",
+    },
   },
   { sequelize, tableName: "categories" }
 );

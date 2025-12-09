@@ -8,6 +8,15 @@ import {
   ProductType,
 } from "../../types";
 import sequelize from "../../config/database";
+import {
+  uploadImageBuffer,
+  deleteImageByPublicId,
+} from "../../utils/cloudinary";
+
+jest.mock("../../utils/cloudinary", () => ({
+  uploadImageBuffer: jest.fn(),
+  deleteImageByPublicId: jest.fn(),
+}));
 
 describe("ProductService", () => {
   let service: ProductService;
@@ -199,6 +208,91 @@ describe("ProductService", () => {
 
       expect(mockTransaction.rollback).toHaveBeenCalled();
       expect(Inventory.create).not.toHaveBeenCalled();
+    });
+
+    it("attaches uploaded image metadata when a file is supplied", async () => {
+      const productData = { name: "GPU", price: 500 };
+      const file: any = {
+        buffer: Buffer.from("image"),
+        mimetype: "image/png",
+        originalname: "gpu.png",
+      };
+      (uploadImageBuffer as jest.Mock).mockResolvedValue({
+        url: "https://cdn/products/gpu.png",
+        publicId: "products/abc",
+      });
+      const productCreateSpy = jest
+        .spyOn(Product, "create")
+        .mockResolvedValue({ id: 1 } as any);
+      jest.spyOn(Inventory, "create").mockResolvedValue({} as any);
+
+      await service.createWithStock(productData, 5, file);
+
+      expect(uploadImageBuffer).toHaveBeenCalledWith(file, "products");
+      expect(productCreateSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          imageUrl: "https://cdn/products/gpu.png",
+          imagePublicId: "products/abc",
+        }),
+        expect.any(Object)
+      );
+    });
+  });
+
+  describe("updateWithImage", () => {
+    it("returns null when product cannot be found", async () => {
+      jest.spyOn(Product, "findByPk").mockResolvedValue(null);
+
+      const result = await service.updateWithImage(1, { name: "Missing" });
+
+      expect(result).toBeNull();
+      expect(deleteImageByPublicId).not.toHaveBeenCalled();
+    });
+
+    it("updates fields and replaces the stored asset when a file is provided", async () => {
+      const file: any = {
+        buffer: Buffer.from("image"),
+        mimetype: "image/png",
+        originalname: "gpu.png",
+      };
+      (uploadImageBuffer as jest.Mock).mockResolvedValue({
+        url: "https://cdn/products/new.png",
+        publicId: "products/new",
+      });
+      const productInstance = {
+        imagePublicId: "products/old",
+        update: jest.fn().mockResolvedValue({ id: 1, name: "Updated" }),
+      };
+      jest.spyOn(Product, "findByPk").mockResolvedValue(productInstance as any);
+
+      const result = await service.updateWithImage(1, { name: "Updated" }, file);
+
+      expect(deleteImageByPublicId).toHaveBeenCalledWith("products/old");
+      expect(uploadImageBuffer).toHaveBeenCalledWith(file, "products");
+      expect(productInstance.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: "Updated",
+          imageUrl: "https://cdn/products/new.png",
+          imagePublicId: "products/new",
+        })
+      );
+      expect(result).toEqual({ id: 1, name: "Updated" });
+    });
+
+    it("only updates data when no file is supplied", async () => {
+      const productInstance = {
+        imagePublicId: "products/old",
+        update: jest.fn().mockResolvedValue({ id: 1, name: "Updated" }),
+      };
+      jest.spyOn(Product, "findByPk").mockResolvedValue(productInstance as any);
+
+      await service.updateWithImage(1, { name: "Updated" });
+
+      expect(uploadImageBuffer).not.toHaveBeenCalled();
+      expect(deleteImageByPublicId).not.toHaveBeenCalled();
+      expect(productInstance.update).toHaveBeenCalledWith(
+        expect.objectContaining({ name: "Updated" })
+      );
     });
   });
 });

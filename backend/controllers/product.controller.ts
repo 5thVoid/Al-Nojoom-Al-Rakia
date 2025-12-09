@@ -2,6 +2,7 @@ import { BaseController } from "./base.controller";
 import { ProductService } from "../services/product.service";
 import { InventoryService } from "../services/inventory.service";
 import { Request, Response, NextFunction } from "express";
+import type { UploadedFile } from "../utils/cloudinary";
 
 export class ProductController extends BaseController<ProductService> {
   private prodService: ProductService;
@@ -17,10 +18,11 @@ export class ProductController extends BaseController<ProductService> {
   // Override Create to handle stock
   create = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { initialStock, ...productData } = req.body;
+      const { data, initialStock } = this.normalizeProductPayload(req.body);
       const result = await this.prodService.createWithStock(
-        productData,
-        initialStock || 0
+        data,
+        initialStock,
+        req.file as UploadedFile | undefined
       );
       res.status(201).json(result);
     } catch (err) {
@@ -129,4 +131,62 @@ export class ProductController extends BaseController<ProductService> {
       next(err);
     }
   };
+
+  update = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { data } = this.normalizeProductPayload(req.body);
+      const result = await this.prodService.updateWithImage(
+        Number(req.params.id),
+        data,
+        req.file as UploadedFile | undefined
+      );
+      if (!result) {
+        return res.status(404).json({ error: "Not Found" });
+      }
+      res.json(result);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  private normalizeProductPayload(body: any) {
+    const payload: any = { ...body };
+
+    const numericFields = [
+      "manufacturerId",
+      "categoryId",
+      "productTypeId",
+    ];
+    numericFields.forEach((field) => {
+      if (payload[field] !== undefined && payload[field] !== null) {
+        const parsed = Number(payload[field]);
+        payload[field] = Number.isNaN(parsed) ? null : parsed;
+      }
+    });
+
+    if (payload.price !== undefined && payload.price !== null) {
+      const parsedPrice = Number(payload.price);
+      payload.price = Number.isNaN(parsedPrice) ? payload.price : parsedPrice;
+    }
+
+    if (payload.specs && typeof payload.specs === "string") {
+      try {
+        payload.specs = JSON.parse(payload.specs);
+      } catch (error) {
+        // leave specs as string to allow validation layer to reject
+      }
+    }
+
+    const initialStock = (() => {
+      if (payload.initialStock === undefined || payload.initialStock === null) {
+        return 0;
+      }
+      const value = Number(payload.initialStock);
+      return Number.isNaN(value) ? 0 : value;
+    })();
+
+    delete payload.initialStock;
+
+    return { data: payload, initialStock };
+  }
 }
