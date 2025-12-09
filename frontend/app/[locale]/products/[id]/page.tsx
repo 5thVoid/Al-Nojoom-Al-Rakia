@@ -8,8 +8,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { Skeleton } from "@/components/ui/skeleton"
 import { ShoppingCart, ArrowLeft, Package, Tag, Layers } from "lucide-react"
-import Image from "next/image"
 
 interface ProductDetails {
     id: number
@@ -89,16 +89,59 @@ export default function ProductPage() {
 
     if (isLoading) {
         return (
-            <div className="container max-w-screen-xl py-8 px-4">
-                <div className="animate-pulse">
-                    <div className="h-8 bg-muted rounded w-1/4 mb-8"></div>
-                    <div className="grid md:grid-cols-2 gap-8">
-                        <div className="h-96 bg-muted rounded"></div>
-                        <div className="space-y-4">
-                            <div className="h-8 bg-muted rounded w-3/4"></div>
-                            <div className="h-4 bg-muted rounded w-1/2"></div>
-                            <div className="h-32 bg-muted rounded"></div>
-                        </div>
+            <div className="container max-w-screen-xl py-8 px-4 md:px-28">
+                {/* Back button skeleton */}
+                <Skeleton className="h-10 w-24 mb-6" />
+
+                <div className="grid md:grid-cols-2 gap-8">
+                    {/* Image skeleton */}
+                    <Card className="overflow-hidden">
+                        <Skeleton className="aspect-square" />
+                    </Card>
+
+                    {/* Details skeleton */}
+                    <div className="space-y-6">
+                        <Card>
+                            <CardHeader>
+                                <div className="flex items-start justify-between gap-4">
+                                    <div className="space-y-2 flex-1">
+                                        <Skeleton className="h-9 w-3/4" />
+                                        <Skeleton className="h-4 w-32" />
+                                    </div>
+                                    <Skeleton className="h-6 w-20" />
+                                </div>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                <Skeleton className="h-10 w-32" />
+                                <Separator />
+                                <div className="space-y-3">
+                                    <Skeleton className="h-5 w-28" />
+                                    {[...Array(3)].map((_, i) => (
+                                        <div key={i} className="flex justify-between">
+                                            <Skeleton className="h-4 w-24" />
+                                            <Skeleton className="h-4 w-20" />
+                                        </div>
+                                    ))}
+                                </div>
+                            </CardContent>
+                            <CardFooter>
+                                <Skeleton className="h-11 w-full" />
+                            </CardFooter>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <Skeleton className="h-6 w-32" />
+                            </CardHeader>
+                            <CardContent className="space-y-3">
+                                {[...Array(4)].map((_, i) => (
+                                    <div key={i} className="flex justify-between">
+                                        <Skeleton className="h-4 w-24" />
+                                        <Skeleton className="h-4 w-16" />
+                                    </div>
+                                ))}
+                            </CardContent>
+                        </Card>
                     </div>
                 </div>
             </div>
@@ -130,9 +173,9 @@ export default function ProductPage() {
 
             <div className="grid md:grid-cols-2 gap-8">
                 {/* Product Image Card */}
-                <Card className="overflow-hidden">
+                <Card className="overflow-hidden bg-background">
                     <CardContent className="p-0">
-                        <div className="relative aspect-square bg-muted flex items-center justify-center">
+                        <div className="relative aspect-square flex items-center justify-center">
                             <Package className="h-32 w-32 text-muted-foreground/20" />
                             {/* Placeholder for product image */}
                         </div>
@@ -141,7 +184,7 @@ export default function ProductPage() {
 
                 {/* Product Details Card */}
                 <div className="space-y-6">
-                    <Card>
+                    <Card className="bg-background">
                         <CardHeader>
                             <div className="flex items-start justify-between gap-4">
                                 <div className="space-y-2">
@@ -201,7 +244,7 @@ export default function ProductPage() {
                     </Card>
 
                     {/* Additional Info Card */}
-                    <Card>
+                    <Card className="bg-background">
                         <CardHeader>
                             <CardTitle className="text-lg">{t('productInfo')}</CardTitle>
                         </CardHeader>

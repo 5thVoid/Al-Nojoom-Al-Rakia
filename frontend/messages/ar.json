@@ -7,12 +7,19 @@
         "cart": "عربة التسوق",
         "login": "تسجيل الدخول",
         "signup": "إنشاء حساب",
+        "profile": "حسابي",
+        "adminDashboard": "لوحة التحكم",
+        "logout": "تسجيل الخروج",
         "searchPlaceholder": "ابحث عن منتجات، تصنيفات...",
         "noResults": "لا توجد نتائج.",
         "suggestions": "اقتراحات",
         "newArrivals": "وصل حديثاً",
         "bestSellers": "الأكثر مبيعاً",
-        "electronics": "إلكترونيات"
+        "electronics": "إلكترونيات",
+        "searching": "جاري البحث",
+        "typeToSearch": "اكتب حرفين على الأقل للبحث",
+        "viewAllResults": "عرض جميع النتائج",
+        "pages": "الصفحات"
     },
     "Cart": {
         "title": "عربة التسوق",
@@ -77,7 +84,10 @@
         "preOrder": "طلب مسبق",
         "addToCart": "أضف للسلة",
         "unavailable": "غير متاح",
-        "onlyLeft": "فقط {count} متبقي!"
+        "onlyLeft": "فقط {count} متبقي!",
+        "manufacturer": "الشركة المصنعة",
+        "category": "التصنيف",
+        "productType": "نوع المنتج"
     },
     "AllProducts": {
         "title": "جميع المنتجات",
@@ -90,7 +100,8 @@
         "showing": "عرض {count} منتج",
         "noProducts": "لا توجد منتجات",
         "showFilters": "إظهار الفلاتر",
-        "hideFilters": "إخفاء الفلاتر"
+        "hideFilters": "إخفاء الفلاتر",
+        "inStockOnly": "المتوفر فقط"
     },
     "ProductPage": {
         "back": "العودة للمنتجات",
@@ -104,5 +115,187 @@
         "categoryId": "معرف التصنيف",
         "productType": "نوع المنتج",
         "typeId": "معرف النوع"
+    },
+    "ProductsPage": {
+        "title": "جميع المنتجات",
+        "searchPlaceholder": "ابحث بالاسم، التصنيف، الشركة المصنعة...",
+        "filters": "الفلاتر",
+        "activeFilters": "الفلاتر النشطة",
+        "clearAll": "مسح الكل",
+        "subcategories": "تصنيفات فرعية",
+        "showingResults": "عرض {count} من {total} منتج",
+        "noProductsTitle": "لا توجد منتجات",
+        "noProductsDescription": "حاول تعديل البحث أو الفلاتر للعثور على ما تبحث عنه.",
+        "clearFilters": "مسح الفلاتر",
+        "previous": "السابق",
+        "next": "التالي",
+        "pageOf": "صفحة {current} من {total}"
+    },
+    "Search": {
+        "title": "نتائج البحث",
+        "resultsFor": "نتائج البحث عن \"{query}\"",
+        "noResults": "لا توجد منتجات مطابقة لبحثك",
+        "back": "رجوع"
+    },
+    "CategoriesPage": {
+        "title": "التصنيفات",
+        "description": "تصفح المنتجات حسب التصنيف",
+        "allCategories": "جميع التصنيفات",
+        "products": "منتجات",
+        "noProducts": "لا توجد منتجات في هذا التصنيف",
+        "viewAllInCategory": "عرض الكل في {category}"
+    },
+    "Checkout": {
+        "title": "إتمام الشراء",
+        "steps": {
+            "shipping": "الشحن",
+            "payment": "الدفع",
+            "review": "المراجعة"
+        },
+        "addressSelection": {
+            "title": "عنوان التوصيل",
+            "noAddresses": "ليس لديك عناوين محفوظة بعد",
+            "addAddress": "أضف عنوانك الأول",
+            "addNewAddress": "إضافة عنوان جديد",
+            "default": "الأساسي",
+            "pleaseSelectAddress": "الرجاء اختيار عنوان للتوصيل",
+            "addressCreated": "تم إنشاء العنوان بنجاح",
+            "addressCreateFailed": "فشل إنشاء العنوان"
+        },
+        "shipping": {
+            "title": "عنوان الشحن",
+            "contactInfo": "معلومات الاتصال",
+            "deliveryTo": "التوصيل إلى",
+            "firstName": "الاسم الأول",
+            "lastName": "اسم العائلة",
+            "email": "البريد الإلكتروني",
+            "phone": "رقم الهاتف",
+            "address": "العنوان",
+            "city": "المدينة",
+            "state": "المنطقة/المحافظة",
+            "zipCode": "الرمز البريدي",
+            "country": "الدولة",
+            "continue": "متابعة للدفع"
+        },
+        "payment": {
+            "title": "تفاصيل الدفع",
+            "cardNumber": "رقم البطاقة",
+            "cardHolder": "اسم حامل البطاقة",
+            "expiry": "تاريخ الانتهاء",
+            "cvv": "رمز التحقق",
+            "back": "رجوع",
+            "continue": "متابعة للمراجعة"
+        },
+        "review": {
+            "title": "مراجعة طلبك",
+            "shippingAddress": "عنوان الشحن",
+            "paymentMethod": "طريقة الدفع",
+            "expires": "ينتهي في",
+            "back": "رجوع",
+            "placeOrder": "تأكيد الطلب"
+        },
+        "summary": {
+            "title": "ملخص الطلب",
+            "subtotal": "المجموع الفرعي",
+            "shipping": "الشحن",
+            "free": "مجاني",
+            "tax": "الضريبة",
+            "total": "الإجمالي"
+        },
+        "saveAddress": {
+            "title": "حفظ العنوان",
+            "description": "هل تريد حفظ هذا العنوان كعنوان الشحن الأساسي للطلبات المستقبلية؟",
+            "yes": "نعم، احفظ العنوان",
+            "no": "لا، متابعة",
+            "saving": "جاري الحفظ...",
+            "success": "تم حفظ العنوان بنجاح",
+            "error": "فشل حفظ العنوان"
+        }
+    },
+    "Profile": {
+        "title": "حسابي",
+        "logout": "تسجيل الخروج",
+        "info": {
+            "title": "معلومات الحساب",
+            "description": "تفاصيل حسابك",
+            "userId": "رقم المستخدم",
+            "email": "البريد الإلكتروني",
+            "role": "الصلاحية"
+        },
+        "addresses": {
+            "title": "عناويني",
+            "description": "إدارة عناوين الشحن الخاصة بك",
+            "add": "إضافة عنوان",
+            "addFirst": "أضف عنوانك الأول",
+            "empty": "لم تقم بإضافة أي عناوين بعد"
+        },
+        "address": {
+            "default": "الأساسي",
+            "edit": "تعديل",
+            "delete": "حذف",
+            "setDefault": "تعيين كأساسي",
+            "created": "تم إنشاء العنوان بنجاح",
+            "updated": "تم تحديث العنوان بنجاح",
+            "deleted": "تم حذف العنوان بنجاح",
+            "defaultSet": "تم تحديث العنوان الأساسي"
+        },
+        "addressForm": {
+            "addTitle": "إضافة عنوان جديد",
+            "addDescription": "أضف عنوان شحن جديد إلى حسابك",
+            "editTitle": "تعديل العنوان",
+            "editDescription": "قم بتحديث تفاصيل عنوان الشحن",
+            "recipientName": "اسم المستلم",
+            "recipientNamePlaceholder": "السيد محمد أحمد",
+            "streetAddress": "عنوان الشارع",
+            "streetAddressPlaceholder": "شارع الملك فهد",
+            "district": "الحي",
+            "districtPlaceholder": "حي العليا",
+            "city": "المدينة",
+            "cityPlaceholder": "الرياض",
+            "postalCode": "الرمز البريدي",
+            "postalCodePlaceholder": "12345",
+            "buildingNumber": "رقم المبنى",
+            "buildingNumberPlaceholder": "12",
+            "secondaryNumber": "رقم الوحدة",
+            "secondaryNumberPlaceholder": "4أ",
+            "phoneNumber": "رقم الهاتف",
+            "phoneNumberPlaceholder": "+966501234567",
+            "label": "تسمية العنوان",
+            "labelPlaceholder": "المنزل، العمل، إلخ.",
+            "setAsDefault": "تعيين كعنوان أساسي",
+            "setAsDefaultDescription": "استخدم هذا العنوان للشراء ",
+            "cancel": "إلغاء",
+            "save": "حفظ العنوان",
+            "update": "تحديث العنوان",
+            "saving": "جاري الحفظ..."
+        },
+        "deleteDialog": {
+            "title": "حذف العنوان",
+            "description": "هل أنت متأكد من حذف هذا العنوان؟ لا يمكن التراجع عن هذا الإجراء.",
+            "cancel": "إلغاء",
+            "confirm": "حذف",
+            "deleting": "جاري الحذف..."
+        },
+        "errors": {
+            "fetchFailed": "فشل تحميل العناوين",
+            "saveFailed": "فشل حفظ العنوان",
+            "deleteFailed": "فشل حذف العنوان",
+            "setDefaultFailed": "فشل تعيين العنوان الأساسي"
+        }
+    },
+    "AdminSidebar": {
+        "adminPanel": "لوحة الإدارة",
+        "profile": "الملف الشخصي",
+        "users": "المستخدمون",
+        "orders": "الطلبات",
+        "products": "المنتجات",
+        "categories": "الفئات",
+        "manufacturers": "الشركات المصنعة",
+        "productTypes": "أنواع المنتجات",
+        "login": "تسجيل الدخول",
+        "backToStore": "العودة للمتجر",
+        "openMenu": "فتح القائمة",
+        "expandSidebar": "توسيع القائمة الجانبية",
+        "collapseSidebar": "طي القائمة الجانبية"
     }
 }

@@ -156,8 +156,8 @@ export function Cart() {
     }
 
     const handleCheckout = () => {
-        // TODO: Implement checkout flow
-        toast.info('Checkout coming soon!')
+        setIsOpen(false)
+        router.push('/checkout')
     }
 
     const items = cartData?.items || []
@@ -296,7 +296,10 @@ export function Cart() {
                         <Button
                             variant="link"
                             className="text-sm text-primary"
-                            onClick={() => setIsOpen(false)}
+                            onClick={() => {
+                                setIsOpen(false)
+                                router.push('/products')
+                            }}
                         >
                             {t('startShopping')}
                         </Button>

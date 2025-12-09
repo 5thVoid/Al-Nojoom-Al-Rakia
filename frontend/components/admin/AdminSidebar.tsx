@@ -1,0 +1,257 @@
+"use client"
+
+import * as React from "react"
+import { Link, usePathname } from "@/i18n/navigation"
+import { useTranslations } from "next-intl"
+import {
+    User,
+    Users,
+    ShoppingCart,
+    Package,
+    FolderTree,
+    Factory,
+    Boxes,
+    LogIn,
+    Store,
+    ChevronLeft,
+    ChevronRight,
+    Menu,
+    X,
+} from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet"
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
+
+interface NavItem {
+    href: string
+    label: string
+    icon: React.ComponentType<{ className?: string }>
+    external?: boolean
+}
+
+interface AdminSidebarProps {
+    locale?: string
+}
+
+export function AdminSidebar({ locale }: AdminSidebarProps) {
+    const t = useTranslations("AdminSidebar")
+    const pathname = usePathname()
+    const [isCollapsed, setIsCollapsed] = React.useState(false)
+    const [isMobileOpen, setIsMobileOpen] = React.useState(false)
+
+    const mainNavItems: NavItem[] = [
+        { href: "/profile", label: t("profile"), icon: User },
+        { href: "/admin/users", label: t("users"), icon: Users },
+        { href: "/admin/orders", label: t("orders"), icon: ShoppingCart },
+        { href: "/admin/products", label: t("products"), icon: Package },
+        { href: "/admin/categories", label: t("categories"), icon: FolderTree },
+        { href: "/admin/manufacturers", label: t("manufacturers"), icon: Factory },
+        { href: "/admin/product-types", label: t("productTypes"), icon: Boxes },
+    ]
+
+    const secondaryNavItems: NavItem[] = [
+        { href: "/auth/login", label: t("login"), icon: LogIn },
+        { href: "/", label: t("backToStore"), icon: Store },
+    ]
+
+    const isActive = (href: string) => {
+        if (href === "/admin") {
+            return pathname === "/admin"
+        }
+        return pathname.startsWith(href)
+    }
+
+    const NavLink = ({
+        item,
+        showLabel = true,
+    }: {
+        item: NavItem
+        showLabel?: boolean
+    }) => {
+        const active = isActive(item.href)
+        const Icon = item.icon
+
+        const linkContent = (
+            <Link
+                href={item.href}
+                onClick={() => setIsMobileOpen(false)}
+                className={cn(
+                    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
+                    "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                    active
+                        ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
+                        : "text-sidebar-foreground/80",
+                    !showLabel && "justify-center px-2"
+                )}
+            >
+                <Icon className={cn("h-5 w-5 shrink-0", active && "text-current")} />
+                {showLabel && <span className="truncate">{item.label}</span>}
+            </Link>
+        )
+
+        if (!showLabel) {
+            return (
+                <Tooltip>
+                    <TooltipTrigger asChild>{linkContent}</TooltipTrigger>
+                    <TooltipContent side="right" className="font-medium">
+                        {item.label}
+                    </TooltipContent>
+                </Tooltip>
+            )
+        }
+
+        return linkContent
+    }
+
+    const SidebarContent = ({ collapsed = false }: { collapsed?: boolean }) => (
+        <div className="flex h-full flex-col">
+            {/* Header */}
+            <div
+                className={cn(
+                    "flex h-16 items-center border-b border-sidebar-border px-4",
+                    collapsed ? "justify-center" : "justify-start"
+                )}
+            >
+                {!collapsed ? (
+                    <h2 className="text-lg font-semibold text-sidebar-foreground">
+                        {t("adminPanel")}
+                    </h2>
+                ) : (
+                    <div className="h-8 w-8 rounded-lg bg-sidebar-primary/10 flex items-center justify-center">
+                        <span className="text-sm font-bold text-sidebar-foreground">A</span>
+                    </div>
+                )}
+            </div>
+
+            {/* Navigation */}
+            <nav className="flex-1 space-y-1 overflow-y-auto p-3">
+                <TooltipProvider delayDuration={0}>
+                    {/* Main Navigation */}
+                    <div className="space-y-1">
+                        {mainNavItems.map((item) => (
+                            <NavLink
+                                key={item.href}
+                                item={item}
+                                showLabel={!collapsed}
+                            />
+                        ))}
+                    </div>
+
+                    <Separator className="my-4 bg-sidebar-border" />
+
+                    {/* Secondary Navigation */}
+                    <div className="space-y-1">
+                        {secondaryNavItems.map((item) => (
+                            <NavLink
+                                key={item.href}
+                                item={item}
+                                showLabel={!collapsed}
+                            />
+                        ))}
+                    </div>
+                </TooltipProvider>
+            </nav>
+
+            {/* Footer */}
+            <div
+                className={cn(
+                    "border-t border-sidebar-border p-4",
+                    collapsed && "flex justify-center"
+                )}
+            >
+                {!collapsed && (
+                    <p className="text-xs text-sidebar-foreground/50">
+                        © {new Date().getFullYear()} Al-Nojoom
+                    </p>
+                )}
+            </div>
+        </div>
+    )
+
+    return (
+        <>
+            {/* Mobile Trigger Button */}
+            <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
+                <SheetTrigger asChild>
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        className="fixed top-4 start-4 z-50 lg:hidden bg-background/80 backdrop-blur-sm border-border shadow-md"
+                    >
+                        <Menu className="h-5 w-5" />
+                        <span className="sr-only">{t("openMenu")}</span>
+                    </Button>
+                </SheetTrigger>
+                <SheetContent
+                    side="left"
+                    className="w-[280px] p-0 bg-sidebar border-sidebar-border"
+                >
+                    <SheetHeader className="sr-only">
+                        <SheetTitle>{t("adminPanel")}</SheetTitle>
+                    </SheetHeader>
+                    <SidebarContent />
+                </SheetContent>
+            </Sheet>
+
+            {/* Desktop Sidebar */}
+            <aside
+                className={cn(
+                    "fixed inset-y-0 start-0 z-40 hidden lg:flex flex-col bg-sidebar border-e border-sidebar-border transition-all duration-300 ease-in-out",
+                    isCollapsed ? "w-16" : "w-64"
+                )}
+            >
+                <SidebarContent collapsed={isCollapsed} />
+
+                {/* Floating Toggle Button on Sidebar Edge */}
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="outline"
+                                size="icon-sm"
+                                onClick={() => setIsCollapsed(!isCollapsed)}
+                                className={cn(
+                                    "absolute top-1/8 -translate-y-1/2 z-50 rounded-full bg-background border-border shadow-md hover:bg-accent hover:text-accent-foreground transition-all duration-300",
+                                    "end-0 translate-x-1/2"
+                                )}
+                            >
+                                {isCollapsed ? (
+                                    <ChevronRight className="h-4 w-4" />
+                                ) : (
+                                    <ChevronLeft className="h-4 w-4" />
+                                )}
+                                <span className="sr-only">
+                                    {isCollapsed ? t("expandSidebar") : t("collapseSidebar")}
+                                </span>
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent side="right">
+                            {isCollapsed ? t("expandSidebar") : t("collapseSidebar")}
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+            </aside>
+
+            {/* Spacer to push content */}
+            <div
+                className={cn(
+                    "hidden lg:block shrink-0 transition-all duration-300 ease-in-out",
+                    isCollapsed ? "w-16" : "w-64"
+                )}
+            />
+        </>
+    )
+}
