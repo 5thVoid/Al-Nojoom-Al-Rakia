@@ -40,7 +40,7 @@ services:
     ports:
       - "5395:5432"
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "nojoom"]
+      test: ["CMD", "pg_isready", "-U", "nojoom_db"]
       interval: 10s
       timeout: 5s
       retries: 5
