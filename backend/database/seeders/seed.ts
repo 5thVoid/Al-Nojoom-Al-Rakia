@@ -5,7 +5,7 @@ import {
   ProductType,
   Product,
   Inventory,
-} from "../../types"; // Adjust path to point to your models/index.ts
+} from "../../types/index.js"; // Adjust path to point to your models/index.ts
 
 async function seed() {
   console.log("🌱 Starting Database Seed...");

@@ -1,6 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
@@ -9,10 +10,10 @@
     "lint": "eslint . --ext .ts",
     "test": "jest",
     "test:watch": "jest --watch",
-    "seed": "ts-node ./database/seeders/seed.ts",
+    "seed": "node --loader ts-node/esm ./database/seeders/seed.ts",
     "db:create": "npx sequelize-cli db:create",
     "db:migrate": "npx sequelize-cli db:migrate",
-    "db:seed": "ts-node database/seeders/seed.ts",
+    "db:seed": "node --loader ts-node/esm ./database/seeders/seed.ts",
     "db:reset": "npx sequelize-cli db:migrate:undo:all && npm run db:migrate && npm run db:seed"
   },
   "author": "",

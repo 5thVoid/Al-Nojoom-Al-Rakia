@@ -2,7 +2,7 @@
   "compilerOptions": {
     /* --- Output & Environment --- */
     "target": "es2020",
-    "module": "commonjs",
+    "module": "es2020",
     "rootDir": ".",                     /* Look for files in current directory */
     "outDir": "./dist",
     
