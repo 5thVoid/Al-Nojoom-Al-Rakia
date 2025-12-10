@@ -1,4 +1,4 @@
-import sequelize from "../../config/database.js"; // Adjust path if needed (e.g. ../../config/database)
+import sequelize from "../../config/database"; // Adjust path if needed (e.g. ../../config/database)
 import {
   Manufacturer,
   Category,
