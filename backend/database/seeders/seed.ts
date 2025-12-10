@@ -7,11 +7,10 @@ import {
   Inventory,
 } from "../../types/index.js"; // Adjust path to point to your models/index.ts
 
-async function seed() {
+export async function seed() {
   console.log("🌱 Starting Database Seed...");
 
   try {
-    // ❌ REMOVED: await sequelize.sync({ force: true });
     // We assume the DB structure exists via Migrations now.
 
     // 1. Clear existing data (Optional: prevents duplicates if you run seed twice)
@@ -141,9 +140,27 @@ async function seed() {
     console.log("✅ Data seeded successfully.");
   } catch (error) {
     console.error("❌ Seeding failed:", error);
-  } finally {
-    await sequelize.close();
+    throw error;
   }
 }
 
-seed();
+/**
+ * Seed the DB only if key tables are empty. Intended to be called on server start.
+ */
+export async function seedIfEmpty() {
+  try {
+    const productCount = await Product.count();
+    const manufacturerCount = await Manufacturer.count();
+
+    if (productCount > 0 || manufacturerCount > 0) {
+      console.log("ℹ️  Database already contains data — skipping seed.");
+      return;
+    }
+
+    console.log("ℹ️  Database appears empty — running seed.");
+    await seed();
+  } catch (err) {
+    console.error("❌ seedIfEmpty error:", err);
+    // do not rethrow — server startup should decide how to handle
+  }
+}
