@@ -7,19 +7,7 @@ RUN npm ci
 FROM node:25-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY tsconfig.json ./
-COPY src ./src
-COPY app.ts ./
-COPY server.ts ./
-COPY config ./config
-COPY controllers ./controllers
-COPY database ./database
-COPY middleware ./middleware
-COPY routes ./routes
-COPY services ./services
-COPY types ./types
-COPY utils ./utils
-COPY package*.json ./
+COPY . .
 RUN npm run build
 
 FROM node:25-alpine AS prod-deps
