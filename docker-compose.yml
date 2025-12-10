@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: nojoom
+      DB_PASS: w3uRU[{0960n
+      DB_NAME: nojoom_db
+      PORT: 3000
+      CLOUDINARY_CLOUD_NAME: dgvk5otot
+      CLOUDINARY_API_KEY: 719997941849135
+      CLOUDINARY_API_SECRET: ATkY8hfHuoJb9Gszg_xjzk92un8
+    ports:
+      - "3396:3000"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "9718:3000"
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: nojoom
+      POSTGRES_PASSWORD: w3uRU[{0960n
+      POSTGRES_DB: nojoom_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5395:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "nojoom"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
