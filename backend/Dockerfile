@@ -23,6 +23,9 @@ COPY --from=prod-deps /app/node_modules ./node_modules
 COPY package*.json ./
 COPY --from=builder /app/dist ./dist
 COPY docker-entrypoint.sh ./
+COPY config ./config
+COPY database ./database
+COPY .sequelizerc ./
 RUN chmod +x docker-entrypoint.sh
 ENTRYPOINT ["./docker-entrypoint.sh"]
 CMD ["node", "dist/server.js"]
