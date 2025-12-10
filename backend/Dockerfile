@@ -25,6 +25,7 @@ COPY --from=builder /app/dist ./dist
 COPY docker-entrypoint.sh ./
 COPY config ./config
 COPY database ./database
+COPY types ./types
 COPY .sequelizerc ./
 RUN chmod +x docker-entrypoint.sh
 ENTRYPOINT ["./docker-entrypoint.sh"]
