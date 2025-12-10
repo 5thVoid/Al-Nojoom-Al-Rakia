@@ -1,11 +1,11 @@
-import sequelize from "../../config/database"; // Adjust path if needed (e.g. ../../config/database)
+import sequelize from "../../config/database.js"; // Adjust path if needed (e.g. ../../config/database)
 import {
   Manufacturer,
   Category,
   ProductType,
   Product,
   Inventory,
-} from "../../types"; // Adjust path to point to your models/index.ts
+} from "../../types/index.js"; // Adjust path to point to your models/index.ts
 
 async function seed() {
   console.log("🌱 Starting Database Seed...");
