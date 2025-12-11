@@ -6,8 +6,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Link } from "@/i18n/navigation"
-import { ShoppingCart, Loader2 } from "lucide-react"
+import { ShoppingCart, Eye, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import Image from "next/image"
 
 export interface Product {
     id: number
@@ -33,6 +34,10 @@ export interface Product {
         id: number
         name: string
     }
+    // Admin-specific fields
+    imageUrl?: string
+    stock?: number
+    specs?: string | Record<string, any>
 }
 
 interface ProductCardProps {
@@ -54,7 +59,7 @@ interface ProductCardProps {
 export function ProductCard({
     product,
     variant = "default",
-    showImage = false,
+    showImage = true,
     clickable = true,
     className,
     showLowStockWarning = true,
@@ -99,8 +104,18 @@ export function ProductCard({
     const cardContent = (
         <>
             {showImage && (
-                <div className="aspect-square bg-muted flex items-center justify-center">
-                    <span className="text-4xl text-muted-foreground/50">📦</span>
+                <div className="aspect-square bg-muted flex items-center justify-center relative overflow-hidden">
+                    {product.imageUrl ? (
+                        <Image
+                            src={product.imageUrl}
+                            alt={product.name}
+                            fill
+                            className="object-contain hover:scale-105 transition-transform duration-300"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
+                    ) : (
+                        <span className="text-4xl text-muted-foreground/50">📦</span>
+                    )}
                 </div>
             )}
             <CardHeader className={variant === "compact" ? "p-4" : ""}>

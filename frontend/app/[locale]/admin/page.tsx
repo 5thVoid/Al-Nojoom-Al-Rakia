@@ -7,9 +7,9 @@ import StatsCardSkeleton from '@/components/admin/StatsCardSkeleton'
 
 export default function AdminDashboard() {
     const t = useTranslations('Admin.Dashboard')
-    const { users, isLoading, pagination } = useAdmin()
+    const { users, isLoading, pagination, stats, isStatsLoading } = useAdmin()
 
-    const stats = [
+    const statsCards = [
         {
             title: t('totalUsers'),
             value: pagination.totalItems.toString(),
@@ -19,21 +19,21 @@ export default function AdminDashboard() {
         },
         {
             title: t('totalOrders'),
-            value: '0',
+            value: stats?.totalOrders.toString() || '0',
             description: t('ordersThisMonth'),
             icon: ShoppingCart,
             iconColor: 'text-green-500',
         },
         {
             title: t('totalProducts'),
-            value: '0',
+            value: stats?.totalProducts.toString() || '0',
             description: t('productsInInventory'),
             icon: Package,
             iconColor: 'text-purple-500',
         },
         {
             title: t('revenue'),
-            value: 'SAR 0',
+            value: stats?.totalRevenue ? `SAR ${stats.totalRevenue.toLocaleString()}` : 'SAR 0',
             description: t('revenueThisMonth'),
             icon: DollarSign,
             iconColor: 'text-yellow-500',
@@ -49,11 +49,11 @@ export default function AdminDashboard() {
                 </p>
             </div>
 
-            {isLoading ? (
+            {isLoading || isStatsLoading ? (
                 <StatsCardSkeleton count={4} columns="4" />
             ) : (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                    {stats.map((stat) => {
+                    {statsCards.map((stat) => {
                         const Icon = stat.icon
                         return (
                             <div

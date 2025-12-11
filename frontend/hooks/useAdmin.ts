@@ -38,18 +38,32 @@ export interface UpdateUserData {
     role?: "admin" | "customer"
 }
 
+export interface AdminStats {
+    totalOrders: number
+    totalRevenue: number
+    averageOrderValue: number
+    itemsSold: number
+    totalProducts: number
+    totalCategories: number
+    totalProductTypes: number
+}
+
 /**
- * Hook to manage admin operations for user management.
+ * Hook to manage admin operations for user management and statistics.
  * Provides functions to fetch, create, update, and delete users.
- * Also includes pagination support for user listing.
+ * Also includes pagination support for user listing and admin statistics.
  * 
- * @returns Admin operations and state including users list, pagination, and CRUD operations
+ * @returns Admin operations and state including users list, pagination, stats, and CRUD operations
  */
 export function useAdmin() {
     const { token, isAuthenticated, user } = useAuth()
     const [users, setUsers] = useState<AdminUser[]>([])
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+
+    // Stats state
+    const [stats, setStats] = useState<AdminStats | null>(null)
+    const [isStatsLoading, setIsStatsLoading] = useState(false)
 
     // Pagination state
     const [pagination, setPagination] = useState<PaginationMeta>({
@@ -100,6 +114,37 @@ export function useAdmin() {
             setUsers([])
         } finally {
             setIsLoading(false)
+        }
+    }, [token, isAuthenticated])
+
+    /**
+     * Fetch admin statistics
+     */
+    const fetchStats = useCallback(async () => {
+        if (!token || !isAuthenticated) {
+            setStats(null)
+            return
+        }
+
+        setIsStatsLoading(true)
+        try {
+            const response = await fetch('/api/admin/stats', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            })
+
+            if (response.ok) {
+                const data = await response.json()
+                setStats(data)
+            } else {
+                setStats(null)
+            }
+        } catch (error) {
+            console.error('Failed to fetch admin stats:', error)
+            setStats(null)
+        } finally {
+            setIsStatsLoading(false)
         }
     }, [token, isAuthenticated])
 
@@ -250,12 +295,13 @@ export function useAdmin() {
         fetchUsers(1, limit)
     }
 
-    // Auto-fetch users on mount if authenticated
+    // Auto-fetch users and stats on mount if authenticated
     useEffect(() => {
         if (isAuthenticated && token && user?.role === 'admin') {
             fetchUsers()
+            fetchStats()
         }
-    }, [isAuthenticated, token, user?.role, fetchUsers])
+    }, [isAuthenticated, token, user?.role, fetchUsers, fetchStats])
 
     return {
         // State
@@ -263,6 +309,8 @@ export function useAdmin() {
         isLoading,
         error,
         pagination,
+        stats,
+        isStatsLoading,
 
         // CRUD Operations
         fetchUsers,
@@ -270,6 +318,7 @@ export function useAdmin() {
         createUser,
         updateUser,
         deleteUser,
+        fetchStats,
 
         // Pagination helpers
         goToPage,

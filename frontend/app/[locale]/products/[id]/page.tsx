@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ShoppingCart, ArrowLeft, Package, Tag, Layers } from "lucide-react"
+import Image from "next/image"
 
 interface ProductDetails {
     id: number
@@ -21,6 +22,7 @@ interface ProductDetails {
     manufacturerId: number
     categoryId: number
     productTypeId: number
+    imageUrl?: string | null
 }
 
 interface Manufacturer {
@@ -175,9 +177,19 @@ export default function ProductPage() {
                 {/* Product Image Card */}
                 <Card className="overflow-hidden bg-background">
                     <CardContent className="p-0">
-                        <div className="relative aspect-square flex items-center justify-center">
-                            <Package className="h-32 w-32 text-muted-foreground/20" />
-                            {/* Placeholder for product image */}
+                        <div className="relative aspect-square flex items-center justify-center bg-muted">
+                            {product.imageUrl ? (
+                                <Image
+                                    src={product.imageUrl}
+                                    alt={product.name}
+                                    fill
+                                    className="object-contain p-8"
+                                    sizes="(max-width: 768px) 100vw, 50vw"
+                                    priority
+                                />
+                            ) : (
+                                <Package className="h-32 w-32 text-muted-foreground/20" />
+                            )}
                         </div>
                     </CardContent>
                 </Card>
