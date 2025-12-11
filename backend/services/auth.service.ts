@@ -3,8 +3,21 @@ import jwt from "jsonwebtoken";
 
 export class AuthService {
   async register(data: any) {
+    const firstName = data?.firstName?.trim();
+    const lastName = data?.lastName?.trim();
+
+    if (!firstName || !lastName) {
+      const error: any = new Error("First name and last name are required");
+      error.status = 400;
+      throw error;
+    }
+
     // User model hook handles hashing
-    const user = await User.create(data);
+    const user = await User.create({
+      ...data,
+      firstName,
+      lastName,
+    });
     return this.generateToken(user);
   }
 
@@ -26,7 +39,7 @@ export class AuthService {
 
     // Fetch user's address - default if exists, or the only address if user has exactly 1
     let address = null;
-    
+
     // First try to get default address
     const defaultAddress = await UserAddress.findOne({
       where: { userId: user.id, isDefault: true },
@@ -48,23 +61,27 @@ export class AuthService {
 
     return {
       token,
-      user: { 
-        id: user.id, 
-        email: user.email, 
+      user: {
+        id: user.id,
+        email: user.email,
         role: user.role,
-        address: address ? {
-          id: address.id,
-          recipientName: address.recipientName,
-          streetAddress: address.streetAddress,
-          district: address.district,
-          postalCode: address.postalCode,
-          city: address.city,
-          buildingNumber: address.buildingNumber,
-          secondaryNumber: address.secondaryNumber,
-          phoneNumber: address.phoneNumber,
-          label: address.label,
-          isDefault: address.isDefault,
-        } : null,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        address: address
+          ? {
+              id: address.id,
+              recipientName: address.recipientName,
+              streetAddress: address.streetAddress,
+              district: address.district,
+              postalCode: address.postalCode,
+              city: address.city,
+              buildingNumber: address.buildingNumber,
+              secondaryNumber: address.secondaryNumber,
+              phoneNumber: address.phoneNumber,
+              label: address.label,
+              isDefault: address.isDefault,
+            }
+          : null,
       },
     };
   }

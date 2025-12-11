@@ -3,4 +3,5 @@ module.exports = {
   testEnvironment: "node",
   clearMocks: true,
   roots: ["<rootDir>/"],
+  testPathIgnorePatterns: ["/node_modules/", "<rootDir>/dist/"],
 };
