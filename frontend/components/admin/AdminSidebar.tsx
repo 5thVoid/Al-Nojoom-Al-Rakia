@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { Link, usePathname } from "@/i18n/navigation"
-import { useTranslations } from "next-intl"
+import { useTranslations, useLocale } from "next-intl"
 import {
     User,
     Users,
@@ -17,6 +17,7 @@ import {
     ChevronRight,
     Menu,
     X,
+    Home,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -50,12 +51,15 @@ interface AdminSidebarProps {
 
 export function AdminSidebar({ locale }: AdminSidebarProps) {
     const t = useTranslations("AdminSidebar")
+    const currentLocale = useLocale()
+    const isRtl = currentLocale === "ar"
     const pathname = usePathname()
     const [isCollapsed, setIsCollapsed] = React.useState(false)
     const [isMobileOpen, setIsMobileOpen] = React.useState(false)
     const { logout } = useAuth()
 
     const mainNavItems: NavItem[] = [
+        { href: "/admin", label: t("dashboard"), icon: Home },
         { href: "/profile", label: t("profile"), icon: User },
         { href: "/admin/users", label: t("users"), icon: Users },
         { href: "/admin/orders", label: t("orders"), icon: ShoppingCart },
@@ -96,7 +100,8 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
                     "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
                     "hover:bg-primary hover:text-sidebar-primary-foreground",
                     "text-sidebar-foreground",
-                    !showLabel && "justify-center px-2"
+                    !showLabel && "justify-center px-2",
+                    isRtl && showLabel && "flex-row-reverse text-right"
                 )}
             >
                 <Icon className={cn("h-5 w-5 shrink-0")} />
@@ -112,7 +117,8 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
                     active
                         ? "bg-accent text-sidebar-accent-foreground shadow-sm"
                         : "text-sidebar-foreground",
-                    !showLabel && "justify-center px-2"
+                    !showLabel && "justify-center px-2",
+                    isRtl && showLabel && "flex-row-reverse text-right"
                 )}
             >
                 <Icon className={cn("h-5 w-5 shrink-0")} />
@@ -140,11 +146,11 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
             <div
                 className={cn(
                     "flex h-16 items-center border-b border-sidebar-border px-4",
-                    collapsed ? "justify-center" : "justify-start"
+                    collapsed ? "justify-center" : isRtl ? "justify-end" : "justify-start"
                 )}
             >
                 {!collapsed ? (
-                    <h2 className="text-lg font-semibold text-sidebar-foreground">
+                    <h2 className={cn("text-lg font-semibold text-sidebar-foreground", isRtl && "text-right")}>
                         {t("adminPanel")}
                     </h2>
                 ) : (
@@ -155,7 +161,11 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
             </div>
 
             {/* Navigation */}
-            <nav className="flex-1 space-y-1 overflow-y-auto p-3">
+            <nav className={cn(
+                "flex-1 space-y-1 overflow-y-auto p-3",
+                isRtl && !collapsed && "ps-8",
+                isRtl && collapsed && "ps-3"
+            )}>
                 <TooltipProvider delayDuration={0}>
                     {/* Main Navigation */}
                     <div className="space-y-1">
@@ -202,7 +212,7 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
                 )}
             >
                 {!collapsed && (
-                    <p className="text-xs text-muted-foreground">
+                    <p className={cn("text-xs text-muted-foreground", isRtl && "text-right")}>
                         © {new Date().getFullYear()} Al-Nojoom
                     </p>
                 )}
@@ -225,7 +235,7 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
                     </Button>
                 </SheetTrigger>
                 <SheetContent
-                    side="left"
+                    side={isRtl ? "right" : "left"}
                     className="w-[280px] p-0 bg-sidebar border-sidebar-border"
                 >
                     <SheetHeader className="sr-only">
@@ -254,7 +264,9 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
                                 onClick={() => setIsCollapsed(!isCollapsed)}
                                 className={cn(
                                     "absolute top-1/8 -translate-y-1/2 z-50 rounded-full bg-background border-border shadow-md hover:bg-accent hover:text-accent-foreground transition-all duration-300",
-                                    "end-0 translate-x-1/2"
+                                    isRtl
+                                        ? (isCollapsed ? "start-0 -translate-x-1/2" : "start-0 -translate-x-1/2")
+                                        : "end-0 translate-x-1/2"
                                 )}
                             >
                                 {isCollapsed ? (

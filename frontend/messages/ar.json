@@ -518,6 +518,7 @@
     },
     "AdminSidebar": {
         "adminPanel": "لوحة الإدارة",
+        "dashboard": "الرئيسية",
         "profile": "الملف الشخصي",
         "users": "المستخدمون",
         "orders": "الطلبات",
@@ -531,5 +532,66 @@
         "openMenu": "فتح القائمة",
         "expandSidebar": "توسيع القائمة الجانبية",
         "collapseSidebar": "طي القائمة الجانبية"
+    },
+    "Admin": {
+        "Dashboard": {
+            "title": "لوحة تحكم المسؤول",
+            "description": "مرحباً بك في لوحة الإدارة. استخدم القائمة الجانبية للتنقل بين الأقسام المختلفة.",
+            "totalUsers": "إجمالي المستخدمين",
+            "activeUsersDescription": "المستخدمون النشطون في النظام",
+            "totalOrders": "إجمالي الطلبات",
+            "ordersThisMonth": "الطلبات المقدمة هذا الشهر",
+            "totalProducts": "إجمالي المنتجات",
+            "productsInInventory": "المنتجات في المخزون",
+            "revenue": "الإيرادات",
+            "revenueThisMonth": "إجمالي الإيرادات هذا الشهر"
+        },
+        "Users": {
+            "title": "إدارة المستخدمين",
+            "description": "إدارة مستخدمي النظام وأدوارهم",
+            "loading": "جاري تحميل المستخدمين...",
+            "createUser": "إنشاء مستخدم",
+            "createUserDescription": "إضافة مستخدم جديد إلى النظام",
+            "editUser": "تعديل المستخدم",
+            "editUserDescription": "تحديث معلومات المستخدم",
+            "deleteUser": "حذف المستخدم",
+            "deleteUserConfirmation": "هل أنت متأكد من حذف {email}؟ لا يمكن التراجع عن هذا الإجراء.",
+            "id": "المعرف",
+            "email": "البريد الإلكتروني",
+            "firstName": "الاسم الأول",
+            "lastName": "اسم العائلة",
+            "password": "كلمة المرور",
+            "role": "الدور",
+            "actions": "الإجراءات",
+            "noUsers": "لا يوجد مستخدمون",
+            "showingResults": "عرض {from} إلى {to} من {total} مستخدم",
+            "previous": "السابق",
+            "next": "التالي",
+            "pageOf": "صفحة {current} من {total}",
+            "cancel": "إلغاء",
+            "create": "إنشاء",
+            "creating": "جاري الإنشاء...",
+            "update": "تحديث",
+            "updating": "جاري التحديث...",
+            "delete": "حذف",
+            "deleting": "جاري الحذف...",
+            "userCreatedSuccess": "تم إنشاء المستخدم بنجاح",
+            "createUserFailed": "فشل إنشاء المستخدم",
+            "userUpdatedSuccess": "تم تحديث المستخدم بنجاح",
+            "updateUserFailed": "فشل تحديث المستخدم",
+            "userDeletedSuccess": "تم حذف المستخدم بنجاح",
+            "deleteUserFailed": "فشل حذف المستخدم",
+            "error": "خطأ",
+            "stats": {
+                "totalUsers": "إجمالي المستخدمين",
+                "adminUsers": "المسؤولون",
+                "customerUsers": "العملاء"
+            },
+            "roles": {
+                "admin": "مسؤول",
+                "manager": "مدير",
+                "customer": "عميل"
+            }
+        }
     }
 }

@@ -517,6 +517,7 @@
         }
     },
     "AdminSidebar": {
+        "dashboard": "Dashboard",
         "adminPanel": "Admin Panel",
         "profile": "Profile",
         "users": "Users",
@@ -531,5 +532,66 @@
         "openMenu": "Open menu",
         "expandSidebar": "Expand sidebar",
         "collapseSidebar": "Collapse sidebar"
+    },
+    "Admin": {
+        "Dashboard": {
+            "title": "Admin Dashboard",
+            "description": "Welcome to the admin panel. Use the sidebar to navigate between different sections.",
+            "totalUsers": "Total Users",
+            "activeUsersDescription": "Active users in the system",
+            "totalOrders": "Total Orders",
+            "ordersThisMonth": "Orders placed this month",
+            "totalProducts": "Total Products",
+            "productsInInventory": "Products in inventory",
+            "revenue": "Revenue",
+            "revenueThisMonth": "Total revenue this month"
+        },
+        "Users": {
+            "title": "User Management",
+            "description": "Manage system users and their roles",
+            "loading": "Loading users...",
+            "createUser": "Create User",
+            "createUserDescription": "Add a new user to the system",
+            "editUser": "Edit User",
+            "editUserDescription": "Update user information",
+            "deleteUser": "Delete User",
+            "deleteUserConfirmation": "Are you sure you want to delete {email}? This action cannot be undone.",
+            "id": "ID",
+            "email": "Email",
+            "firstName": "First Name",
+            "lastName": "Last Name",
+            "password": "Password",
+            "role": "Role",
+            "actions": "Actions",
+            "noUsers": "No users found",
+            "showingResults": "Showing {from} to {to} of {total} users",
+            "previous": "Previous",
+            "next": "Next",
+            "pageOf": "Page {current} of {total}",
+            "cancel": "Cancel",
+            "create": "Create",
+            "creating": "Creating...",
+            "update": "Update",
+            "updating": "Updating...",
+            "delete": "Delete",
+            "deleting": "Deleting...",
+            "userCreatedSuccess": "User created successfully",
+            "createUserFailed": "Failed to create user",
+            "userUpdatedSuccess": "User updated successfully",
+            "updateUserFailed": "Failed to update user",
+            "userDeletedSuccess": "User deleted successfully",
+            "deleteUserFailed": "Failed to delete user",
+            "error": "Error",
+            "stats": {
+                "totalUsers": "Total Users",
+                "adminUsers": "Admin Users",
+                "customerUsers": "Customer Users"
+            },
+            "roles": {
+                "admin": "Admin",
+                "manager": "Manager",
+                "customer": "Customer"
+            }
+        }
     }
 }
