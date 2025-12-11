@@ -6,9 +6,32 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Link } from "@/i18n/navigation"
-import { ShoppingCart, Eye, Loader2 } from "lucide-react"
+import { ShoppingCart, Loader2, Pencil, Trash2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
+import { cva, type VariantProps } from "class-variance-authority"
+
+const productCardVariants = cva(
+    "flex bg-card group overflow-hidden transition-all duration-300 hover:shadow-lg",
+    {
+        variants: {
+            variant: {
+                default: "flex-col h-full",
+                horizontal: "flex-row w-full h-[180px]",
+                compact: "flex-col h-full text-sm",
+                featured: "flex-col h-full text-sm",
+            },
+            clickable: {
+                true: "cursor-pointer",
+                false: "",
+            }
+        },
+        defaultVariants: {
+            variant: "default",
+            clickable: true,
+        },
+    }
+)
 
 export interface Product {
     id: number
@@ -42,30 +65,45 @@ export interface Product {
 
 interface ProductCardProps {
     product: Product
-    /** Variant of the card layout */
-    variant?: "default" | "compact" | "grid"
     /** Whether to show the product image placeholder */
     showImage?: boolean
     /** Whether clicking the card navigates to product page */
     clickable?: boolean
     /** Additional class names */
     className?: string
-    /** Whether to show low stock warning */
+    /** Whether to show low stock warning (User mode) */
     showLowStockWarning?: boolean
     /** Whether to show metadata (manufacturer, category, type) */
     showMetadata?: boolean
+
+    // New Props for Unified Card
+    /** Admin mode: enables edit/delete actions, shows SKU and stock count */
+    isAdmin?: boolean
+    /** Shows "Best Seller" badge */
+    isBestSeller?: boolean
+    /** Shows "New" badge */
+    isJustAdded?: boolean
+    /** Callback for delete action (Admin mode) */
+    onDelete?: (id: number) => void
+    /** Layout variant */
+    variant?: VariantProps<typeof productCardVariants>["variant"]
 }
 
 export function ProductCard({
     product,
-    variant = "default",
     showImage = true,
     clickable = true,
     className,
     showLowStockWarning = true,
     showMetadata = true,
+    isAdmin = false,
+    isBestSeller = false,
+    isJustAdded = false,
+    onDelete,
+    variant = "default"
 }: ProductCardProps) {
     const t = useTranslations('Products')
+    const tAdmin = useTranslations('Admin.Products')
     const { addToCart, isAdding } = useCart()
 
     const getStockBadgeColor = (stockLabel: string) => {
@@ -101,220 +139,203 @@ export function ProductCard({
         }
     }
 
+    const handleDelete = (e: React.MouseEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
+        if (onDelete) {
+            onDelete(product.id)
+        }
+    }
+
+    const stockQuantity = product.stock ?? product.quantity ?? 0
+
+    // Styles for sub-elements based on variant
+    const imageContainerClasses = cn(
+        "bg-muted flex items-center justify-center relative overflow-hidden",
+        variant === "horizontal" ? "w-[180px] h-full shrink-0" : "aspect-square w-full",
+        (variant === "compact" || variant === "featured") && "aspect-square"
+    )
+
+    const contentContainerClasses = cn(
+        "flex flex-1 flex-col p-4",
+        variant === "horizontal" && "justify-between",
+        variant === "compact" && "p-3",
+        variant === "featured" && "p-2"
+    )
+
+    const badgeContainerClasses = cn(
+        "absolute flex z-10",
+        variant === "horizontal" ? "top-2 left-2 flex-col gap-1" : "top-2 left-2 flex-col gap-1"
+    )
+
     const cardContent = (
         <>
             {showImage && (
-                <div className="aspect-square bg-muted flex items-center justify-center relative overflow-hidden">
+                <div className={imageContainerClasses}>
                     {product.imageUrl ? (
                         <Image
                             src={product.imageUrl}
                             alt={product.name}
                             fill
-                            className="object-contain hover:scale-105 transition-transform duration-300"
+                            className={cn(
+                                "object-contain p-2 transition-transform duration-300 group-hover:scale-105",
+                            )}
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         />
                     ) : (
                         <span className="text-4xl text-muted-foreground/50">📦</span>
                     )}
-                </div>
-            )}
-            <CardHeader className={variant === "compact" ? "p-4" : ""}>
-                <div className="flex items-start justify-between gap-2">
-                    <CardTitle className={cn(
-                        "line-clamp-2",
-                        variant === "compact" ? "text-sm" : "text-lg"
-                    )}>
-                        {product.name}
-                    </CardTitle>
-                    <span
-                        className={cn(
-                            "px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap border",
-                            getStockBadgeColor(product.stockLabel)
-                        )}
-                    >
-                        {getStockLabel(product.stockLabel)}
-                    </span>
-                </div>
-            </CardHeader>
-            <CardContent className={cn("flex-1", variant === "compact" ? "p-4 pt-0" : "")}>
-                <div className={cn(
-                    "font-bold text-primary",
-                    variant === "compact" ? "text-lg" : "text-2xl"
-                )}>
-                    SAR {parseFloat(product.price).toFixed(2)}
-                </div>
 
-                {/* Product metadata */}
-                {showMetadata && (
-                    <div className="mt-3 space-y-1 text-xs text-muted-foreground">
-                        {product.manufacturer && (
-                            <div className="flex items-center gap-1">
-                                <span>{t('manufacturer')}:</span>
-                                <span className="font-semibold">{product.manufacturer.name}</span>
-                            </div>
+                    {/* Floating Badges */}
+                    <div className={badgeContainerClasses}>
+                        {isBestSeller && (
+                            <Badge className="bg-amber-500 hover:bg-amber-600 text-white border-none shadow-sm text-[10px] px-1.5 h-5">
+                                Best Seller
+                            </Badge>
                         )}
-                        {product.category && (
-                            <div className="flex items-center gap-1">
-                                <span>{t('category')}:</span>
-                                <span className="font-semibold">{product.category.name}</span>
-                            </div>
-                        )}
-                        {product.productType && (
-                            <div className="flex items-center gap-1">
-                                <span>{t('productType')}:</span>
-                                <span className="font-semibold">{product.productType.name}</span>
-                            </div>
+                        {isJustAdded && (
+                            <Badge className="bg-blue-500 hover:bg-blue-600 text-white border-none shadow-sm text-[10px] px-1.5 h-5">
+                                New
+                            </Badge>
                         )}
                     </div>
-                )}
+                </div>
+            )}
 
-                {showLowStockWarning && product.quantity > 0 && product.quantity <= 5 && (
-                    <CardDescription className="mt-2">
-                        {t('onlyLeft', { count: product.quantity })}
-                    </CardDescription>
-                )}
-            </CardContent>
-            <CardFooter className={variant === "compact" ? "p-4 pt-0" : ""}>
-                <Button
-                    className="w-full"
-                    size={variant === "compact" ? "sm" : "default"}
-                    disabled={!product.isPurchasable || isAdding}
-                    variant={product.isPurchasable ? "default" : "secondary"}
-                    onClick={handleAddToCart}
-                >
-                    {isAdding ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                        <>
-                            <ShoppingCart className="h-4 w-4 me-2" />
-                            {product.isPurchasable ? t('addToCart') : t('unavailable')}
-                        </>
+            <div className={contentContainerClasses}>
+                <div className="flex flex-col gap-1">
+                    <CardHeader className="p-0 space-y-1">
+                        <div className="flex items-start justify-between gap-2">
+                            <CardTitle className={cn(
+                                "font-semibold line-clamp-2",
+                                variant === "horizontal" ? "text-lg" : "text-base",
+                                (variant === "compact" || variant === "featured") && "text-sm"
+                            )}>
+                                {product.name}
+                            </CardTitle>
+                        </div>
+                        {/* Admin SKU */}
+                        {isAdmin && product.sku && (
+                            <p className="text-xs text-muted-foreground font-mono">
+                                SKU: {product.sku}
+                            </p>
+                        )}
+                    </CardHeader>
+
+                    {/* Product metadata */}
+                    {showMetadata && variant !== "compact" && variant !== "featured" && (
+                        <div className="text-xs text-muted-foreground flex flex-wrap gap-x-3 gap-y-1 mt-1">
+                            {product.manufacturer && (
+                                <span className="inline-flex items-center gap-1 font-medium text-foreground">
+                                    {product.manufacturer.name}
+                                </span>
+                            )}
+                            {product.productType && (
+                                <span className="inline-flex items-center gap-1">
+                                    • {product.productType.name}
+                                </span>
+                            )}
+                        </div>
                     )}
-                </Button>
-            </CardFooter>
+                </div>
+
+                <div className={cn("mt-auto flex flex-col gap-3", variant === "horizontal" && "flex-row items-end justify-between")}>
+                    <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                            <div className="font-bold text-lg text-primary">
+                                SAR {parseFloat(product.price).toFixed(2)}
+                            </div>
+
+                            {/* Stock Status Badge */}
+                            {isAdmin ? (
+                                <Badge variant={stockQuantity > 0 ? "default" : "destructive"} className="h-fit">
+                                    {stockQuantity > 0 ? `${stockQuantity} ${t('inStock')}` : t('outOfStock')}
+                                </Badge>
+                            ) : (
+                                <span
+                                    className={cn(
+                                        "px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap border",
+                                        getStockBadgeColor(product.stockLabel)
+                                    )}
+                                >
+                                    {getStockLabel(product.stockLabel)}
+                                </span>
+                            )}
+                        </div>
+
+                        {/* Low Stock Warning (User only) */}
+                        {!isAdmin && showLowStockWarning && product.quantity > 0 && product.quantity <= 5 && (
+                            <CardDescription className="text-xs text-orange-600">
+                                {t('onlyLeft', { count: product.quantity })}
+                            </CardDescription>
+                        )}
+                    </div>
+
+                    <CardFooter className="p-0 pt-0 gap-2 min-w-[120px]">
+                        {isAdmin ? (
+                            <div className="flex gap-2 w-full">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="flex-1"
+                                    asChild
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    <Link href={`/admin/products/${product.id}/edit`}>
+                                        <Pencil className="h-4 w-4 mr-2" />
+                                        {tAdmin('edit')}
+                                    </Link>
+                                </Button>
+                                <Button
+                                    variant="destructive"
+                                    size="sm"
+                                    className="flex-1"
+                                    onClick={handleDelete}
+                                >
+                                    <Trash2 className="h-4 w-4 mr-2" />
+                                    {tAdmin('delete')}
+                                </Button>
+                            </div>
+                        ) : (
+                            <Button
+                                className="w-full"
+                                size="sm"
+                                disabled={!product.isPurchasable || isAdding}
+                                variant={product.isPurchasable ? "default" : "secondary"}
+                                onClick={handleAddToCart}
+                            >
+                                {isAdding ? (
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                    <>
+                                        <ShoppingCart className="h-4 w-4 me-2" />
+                                        {product.isPurchasable ? t('addToCart') : t('unavailable')}
+                                    </>
+                                )}
+                            </Button>
+                        )}
+                    </CardFooter>
+                </div>
+            </div>
         </>
     )
 
-    const cardClasses = cn(
-        "flex flex-col bg-card hover:shadow-lg transition-shadow duration-300",
-        clickable && "cursor-pointer",
-        className
-    )
-
     if (clickable) {
+        // Admin links to admin details, User links to shop details
+        const linkHref = isAdmin ? `/admin/products/${product.id}` : `/products/${product.id}`
+
         return (
-            <Link href={`/products/${product.id}`}>
-                <Card className={cn(cardClasses, "h-full")}>
+            <Link href={linkHref} className="block h-full">
+                <div className={productCardVariants({ variant, clickable, className })}>
                     {cardContent}
-                </Card>
+                </div>
             </Link>
         )
     }
 
     return (
-        <Card className={cn(cardClasses, "h-full")}>
+        <div className={productCardVariants({ variant, clickable, className })}>
             {cardContent}
-        </Card>
-    )
-}
-
-// Compact variant for grid displays with image
-export function ProductCardCompact({
-    product,
-    className,
-}: {
-    product: Product
-    className?: string
-}) {
-    const t = useTranslations('Products')
-    const { addToCart, isAdding } = useCart()
-
-    const getStockBadgeColor = (stockLabel: string) => {
-        switch (stockLabel) {
-            case 'in_stock':
-                return 'bg-green-500/10 text-green-500 border-green-500/20'
-            case 'low_stock':
-                return 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20'
-            case 'out_of_stock':
-                return 'bg-red-500/10 text-red-500 border-red-500/20'
-            case 'pre_order':
-                return 'bg-blue-500/10 text-blue-500 border-blue-500/20'
-            default:
-                return 'bg-muted text-muted-foreground'
-        }
-    }
-
-    const getStockLabel = (stockLabel: string) => {
-        const labels: Record<string, string> = {
-            in_stock: t('inStock'),
-            low_stock: t('lowStock'),
-            out_of_stock: t('outOfStock'),
-            pre_order: t('preOrder')
-        }
-        return labels[stockLabel] || stockLabel
-    }
-
-    const handleAddToCart = (e: React.MouseEvent) => {
-        e.preventDefault()
-        e.stopPropagation()
-        if (product.isPurchasable) {
-            addToCart(product.id)
-        }
-    }
-
-    return (
-        <Card className={cn(
-            "group overflow-hidden bg-card hover:shadow-lg transition-shadow",
-            className
-        )}>
-            <Link href={`/products/${product.id}`}>
-                <div className="aspect-square bg-muted flex items-center justify-center">
-                    <span className="text-4xl text-muted-foreground/50">📦</span>
-                </div>
-            </Link>
-            <CardContent className="p-4">
-                <div className="flex items-center justify-between mb-2">
-                    <Badge variant="outline" className="text-xs">
-                        {product.manufacturer?.name}
-                    </Badge>
-                    <span
-                        className={cn(
-                            "px-2 py-0.5 rounded-full text-xs font-medium",
-                            getStockBadgeColor(product.stockLabel)
-                        )}
-                    >
-                        {getStockLabel(product.stockLabel)}
-                    </span>
-                </div>
-                <Link href={`/products/${product.id}`}>
-                    <h3 className="font-medium text-sm line-clamp-2 hover:text-primary transition-colors mb-2">
-                        {product.name}
-                    </h3>
-                </Link>
-                <p className="text-xs text-muted-foreground mb-2">
-                    {product.productType?.name}
-                </p>
-                <div className="flex items-center justify-between">
-                    <span className="font-bold text-primary">
-                        SAR {parseFloat(product.price).toFixed(2)}
-                    </span>
-                </div>
-                <Button
-                    size="sm"
-                    className="w-full mt-3"
-                    disabled={!product.isPurchasable || isAdding}
-                    onClick={handleAddToCart}
-                >
-                    {isAdding ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                        <>
-                            <ShoppingCart className="h-4 w-4 mr-2" />
-                            {t('addToCart')}
-                        </>
-                    )}
-                </Button>
-            </CardContent>
-        </Card>
+        </div>
     )
 }

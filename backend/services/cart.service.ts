@@ -41,7 +41,7 @@ export class CartService {
       include: [
         {
           model: Product,
-          attributes: ["id", "name", "sku", "price"],
+          attributes: ["id", "name", "sku", "price", "imageUrl"],
         },
       ],
       order: [["createdAt", "DESC"]],

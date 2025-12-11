@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ProductCardCompact, Product } from "@/components/products/ProductCard"
+import { ProductCard, Product } from "@/components/products/ProductCard"
 import { CategoriesGrid, Category } from "@/components/products/CategoriesGrid"
 import { ProductsGridSkeleton } from "@/components/products/ProductFilters"
 import { Link } from "@/i18n/navigation"
@@ -124,7 +124,7 @@ export default function CategoriesPage() {
                     </div>
 
                     {isLoadingProducts ? (
-                        <ProductsGridSkeleton count={6} variant="compact" />
+                        <ProductsGridSkeleton count={6} />
                     ) : products.length === 0 ? (
                         <Card className="bg-card">
                             <CardContent className="py-12 text-center">
@@ -134,9 +134,10 @@ export default function CategoriesPage() {
                     ) : (
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                             {products.map((product) => (
-                                <ProductCardCompact
+                                <ProductCard
                                     key={product.id}
                                     product={product}
+                                    variant="compact"
                                 />
                             ))}
                         </div>

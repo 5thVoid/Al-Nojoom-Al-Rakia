@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useTranslations } from "next-intl"
 import { useProducts } from "@/hooks/useProducts"
 import { useRouter } from "@/i18n/navigation"
-import AdminProductCard from "@/components/admin/AdminProductCard"
+import { ProductCard } from "@/components/products/ProductCard"
 import StatsCardSkeleton from "@/components/admin/StatsCardSkeleton"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
@@ -16,6 +16,15 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/pagination"
 import { toast } from "sonner"
 
 export default function AdminProductsPage() {
@@ -101,9 +110,10 @@ export default function AdminProductsPage() {
                 <>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         {products.map((product) => (
-                            <AdminProductCard
+                            <ProductCard
                                 key={product.id}
                                 product={product}
+                                isAdmin={true}
                                 onDelete={handleDeleteClick}
                             />
                         ))}
@@ -111,37 +121,67 @@ export default function AdminProductsPage() {
 
                     {/* Pagination */}
                     {pagination.totalPages > 1 && (
-                        <div className="flex items-center justify-between">
-                            <p className="text-sm text-muted-foreground">
+                        <div className="mt-8">
+                            <div className="mb-4 text-sm text-muted-foreground text-center">
                                 {t("showingResults", {
                                     from: (pagination.currentPage - 1) * pagination.itemsPerPage + 1,
                                     to: Math.min(pagination.currentPage * pagination.itemsPerPage, pagination.totalItems),
                                     total: pagination.totalItems,
                                 })}
-                            </p>
-                            <div className="flex items-center gap-2">
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => goToPage(pagination.currentPage - 1)}
-                                    disabled={!hasPreviousPage}
-                                >
-                                    {t("previous")}
-                                </Button>
-                                <span className="text-sm">
-                                    {t("pageOf", {
-                                        current: pagination.currentPage,
-                                        total: pagination.totalPages,
+                            </div>
+
+                            <Pagination>
+                                <PaginationContent>
+                                    <PaginationItem>
+                                        <PaginationPrevious
+                                            onClick={() => goToPage(pagination.currentPage - 1)}
+                                            className={!hasPreviousPage ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                                        />
+                                    </PaginationItem>
+
+                                    {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((page) => {
+                                        // Show first page, last page, current page, and pages around current
+                                        const isFirstPage = page === 1
+                                        const isLastPage = page === pagination.totalPages
+                                        const isCurrentPage = page === pagination.currentPage
+                                        const isNearCurrent = Math.abs(page - pagination.currentPage) <= 1
+
+                                        if (isFirstPage || isLastPage || isCurrentPage || isNearCurrent) {
+                                            return (
+                                                <PaginationItem key={page}>
+                                                    <PaginationLink
+                                                        onClick={() => goToPage(page)}
+                                                        isActive={pagination.currentPage === page}
+                                                        className="cursor-pointer"
+                                                    >
+                                                        {page}
+                                                    </PaginationLink>
+                                                </PaginationItem>
+                                            )
+                                        } else if (page === pagination.currentPage - 2 || page === pagination.currentPage + 2) {
+                                            return (
+                                                <PaginationItem key={page}>
+                                                    <PaginationEllipsis />
+                                                </PaginationItem>
+                                            )
+                                        }
+                                        return null
                                     })}
-                                </span>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => goToPage(pagination.currentPage + 1)}
-                                    disabled={!hasNextPage}
-                                >
-                                    {t("next")}
-                                </Button>
+
+                                    <PaginationItem>
+                                        <PaginationNext
+                                            onClick={() => goToPage(pagination.currentPage + 1)}
+                                            className={!hasNextPage ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                                        />
+                                    </PaginationItem>
+                                </PaginationContent>
+                            </Pagination>
+
+                            <div className="text-center mt-4 text-sm text-muted-foreground">
+                                {t("pageOf", {
+                                    current: pagination.currentPage,
+                                    total: pagination.totalPages,
+                                })}
                             </div>
                         </div>
                     )}

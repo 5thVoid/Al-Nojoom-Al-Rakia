@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react"
 import { useTranslations } from "next-intl"
 import { Card, CardContent } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
 import { ProductCard, Product } from "@/components/products/ProductCard"
+import { ProductsGridSkeleton } from "@/components/products/ProductFilters"
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 
@@ -51,25 +51,10 @@ export function FeaturedProducts() {
                     <h2 className="text-3xl font-bold tracking-tight text-center my-12 text-foreground">
                         {t('title')}
                     </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-12">
-                        {[...Array(3)].map((_, i) => (
-                            <Card key={i} className="overflow-hidden">
-                                <Skeleton className="aspect-[4/3]" />
-                                <CardContent className="p-4 space-y-3">
-                                    <div className="flex justify-between">
-                                        <Skeleton className="h-5 w-3/4" />
-                                        <Skeleton className="h-5 w-16" />
-                                    </div>
-                                    <Skeleton className="h-6 w-24" />
-                                    <div className="space-y-1">
-                                        <Skeleton className="h-3 w-32" />
-                                        <Skeleton className="h-3 w-28" />
-                                    </div>
-                                    <Skeleton className="h-10 w-full" />
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
+                    <ProductsGridSkeleton
+                        count={3}
+                        gridClassName="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-12"
+                    />
                 </div>
             </section>
         )

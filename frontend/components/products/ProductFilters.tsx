@@ -50,6 +50,10 @@ interface ProductFiltersProps {
     isVisible?: boolean
     /** Additional class names */
     className?: string
+    /** Minimum price for slider (optional, defaults to 0) */
+    minPrice?: number
+    /** Maximum price for slider (optional, defaults to 5000) */
+    maxPrice?: number
 }
 
 export function ProductFilters({
@@ -67,6 +71,8 @@ export function ProductFilters({
     isLoading = false,
     isVisible = true,
     className,
+    minPrice = 0,
+    maxPrice = 5000,
 }: ProductFiltersProps) {
     const t = useTranslations('AllProducts')
 
@@ -137,8 +143,8 @@ export function ProductFilters({
                     <div className="space-y-4">
                         <Label className="text-sm font-semibold">{t('priceRange')}</Label>
                         <Slider
-                            min={0}
-                            max={5000}
+                            min={minPrice}
+                            max={maxPrice}
                             step={50}
                             value={priceRange}
                             onValueChange={(value) => onPriceRangeChange(value as [number, number])}
@@ -220,43 +226,27 @@ export function ProductFilters({
     )
 }
 
-// Single product card skeleton
+// Single unified product card skeleton
 export function ProductCardSkeleton() {
     return (
-        <Card className="overflow-hidden">
-            <Skeleton className="aspect-[4/3]" />
-            <CardContent className="p-4 space-y-3">
-                <div className="flex justify-between">
-                    <Skeleton className="h-5 w-3/4" />
-                    <Skeleton className="h-5 w-16" />
+        <Card className="overflow-hidden h-full flex flex-col">
+            <div className="aspect-square bg-muted relative">
+                <Skeleton className="h-full w-full" />
+            </div>
+            <CardContent className="p-4 flex-1 flex flex-col gap-2">
+                <Skeleton className="h-5 w-3/4 mb-1" />
+                <div className="mt-auto flex items-center justify-between">
+                    <Skeleton className="h-6 w-20" />
+                    <Skeleton className="h-5 w-16 rounded-full" />
                 </div>
-                <Skeleton className="h-6 w-24" />
-                <div className="space-y-1">
-                    <Skeleton className="h-3 w-32" />
-                    <Skeleton className="h-3 w-28" />
-                    <Skeleton className="h-3 w-24" />
+                <div className="flex gap-2 mt-2">
+                    <Skeleton className="h-3 w-20" />
+                    <Skeleton className="h-3 w-20" />
                 </div>
-                <Skeleton className="h-10 w-full" />
             </CardContent>
-        </Card>
-    )
-}
-
-// Compact product card skeleton (for grid displays)
-export function ProductCardCompactSkeleton() {
-    return (
-        <Card className="overflow-hidden">
-            <Skeleton className="aspect-square" />
-            <CardContent className="p-4 space-y-2">
-                <div className="flex justify-between">
-                    <Skeleton className="h-4 w-16" />
-                    <Skeleton className="h-4 w-12" />
-                </div>
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-3 w-20" />
-                <Skeleton className="h-5 w-24" />
-                <Skeleton className="h-8 w-full" />
-            </CardContent>
+            <div className="p-4 pt-0">
+                <Skeleton className="h-9 w-full rounded-md" />
+            </div>
         </Card>
     )
 }
@@ -264,23 +254,15 @@ export function ProductCardCompactSkeleton() {
 // Loading skeleton for products grid
 export function ProductsGridSkeleton({
     count = 6,
-    variant = "default",
     gridClassName
 }: {
     count?: number
-    variant?: "default" | "compact"
     gridClassName?: string
 }) {
-    const defaultGridClass = variant === "compact"
-        ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4"
-        : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-
     return (
-        <div className={gridClassName || defaultGridClass}>
+        <div className={gridClassName || "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"}>
             {[...Array(count)].map((_, i) => (
-                variant === "compact"
-                    ? <ProductCardCompactSkeleton key={i} />
-                    : <ProductCardSkeleton key={i} />
+                <ProductCardSkeleton key={i} />
             ))}
         </div>
     )
