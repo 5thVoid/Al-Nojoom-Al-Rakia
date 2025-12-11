@@ -7,6 +7,7 @@ import StatsCardSkeleton from '@/components/admin/StatsCardSkeleton'
 
 export default function AdminDashboard() {
     const t = useTranslations('Admin.Dashboard')
+    const tCommon = useTranslations('Common')
     const { users, isLoading, pagination, stats, isStatsLoading } = useAdmin()
 
     const statsCards = [
@@ -33,7 +34,7 @@ export default function AdminDashboard() {
         },
         {
             title: t('revenue'),
-            value: stats?.totalRevenue ? `SAR ${stats.totalRevenue.toLocaleString()}` : 'SAR 0',
+            value: stats?.totalRevenue ? `${tCommon('currency')} ${stats.totalRevenue.toLocaleString()}` : `${tCommon('currency')} 0`,
             description: t('revenueThisMonth'),
             icon: DollarSign,
             iconColor: 'text-yellow-500',

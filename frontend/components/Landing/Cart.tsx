@@ -44,6 +44,7 @@ export function Cart() {
     const [isLoading, setIsLoading] = React.useState(false)
     const [isOpen, setIsOpen] = React.useState(false)
     const t = useTranslations('Cart')
+    const tCommon = useTranslations('Common')
     const { isAuthenticated, token } = useAuth()
     const router = useRouter()
 
@@ -225,7 +226,7 @@ export function Cart() {
                                         <div className="flex flex-1 flex-col gap-1">
                                             <span className="font-medium line-clamp-1">{item.product.name}</span>
                                             <span className="text-sm text-muted-foreground">
-                                                SAR {parseFloat(item.product.price).toFixed(2)}
+                                                {tCommon('currency')} {parseFloat(item.product.price).toFixed(2)}
                                             </span>
                                             <div className="mt-2 flex items-center gap-2">
                                                 <Button
@@ -267,7 +268,7 @@ export function Cart() {
                             <div className="w-full space-y-4">
                                 <div className="flex items-center justify-between text-base font-medium">
                                     <span>{t('total')}</span>
-                                    <span>SAR {total.toFixed(2)}</span>
+                                    <span>{tCommon('currency')} {total.toFixed(2)}</span>
                                 </div>
                                 <div className="grid gap-2">
                                     <Button

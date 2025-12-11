@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Search, Home, ShoppingBag, User, LogIn, Package, Loader2, ArrowRight } from "lucide-react"
+import { Search, Home, ShoppingBag, User, LogIn, Package, Loader2, ArrowRight, Tag, Building2, Layers } from "lucide-react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import {
@@ -21,17 +21,46 @@ interface Product {
     id: number
     name: string
     price: string
-    manufacturer?: { name: string }
-    category?: { name: string }
+    manufacturer?: { id: number; name: string }
+    category?: { id: number; name: string }
+    productType?: { id: number; name: string }
     imageUrl?: string | null
+}
+
+interface Category {
+    id: number
+    name: string
+}
+
+interface Manufacturer {
+    id: number
+    name: string
+}
+
+interface ProductType {
+    id: number
+    name: string
+}
+
+interface SearchResults {
+    products: Product[]
+    categories: Category[]
+    manufacturers: Manufacturer[]
+    productTypes: ProductType[]
 }
 
 export function SearchBar() {
     const [open, setOpen] = React.useState(false)
     const [searchQuery, setSearchQuery] = React.useState("")
-    const [products, setProducts] = React.useState<Product[]>([])
+    const [searchResults, setSearchResults] = React.useState<SearchResults>({
+        products: [],
+        categories: [],
+        manufacturers: [],
+        productTypes: []
+    })
     const [isSearching, setIsSearching] = React.useState(false)
     const t = useTranslations('Navbar')
+    const tCommon = useTranslations('Common')
     const router = useRouter()
 
     const debouncedSearch = useDebounce(searchQuery, 300)
@@ -56,35 +85,84 @@ export function SearchBar() {
         return () => document.removeEventListener("keydown", down)
     }, [])
 
-    // Search products when debounced query changes
+    // Search all items when debounced query changes
     React.useEffect(() => {
-        const searchProducts = async () => {
+        const searchAll = async () => {
             if (!debouncedSearch || debouncedSearch.length < 2) {
-                setProducts([])
+                setSearchResults({
+                    products: [],
+                    categories: [],
+                    manufacturers: [],
+                    productTypes: []
+                })
                 return
             }
 
             setIsSearching(true)
             try {
-                const response = await fetch(`/api/products?page=1&limit=5&search=${encodeURIComponent(debouncedSearch)}`)
-                const data = await response.json()
-                setProducts(data.data || [])
+                const searchTerm = encodeURIComponent(debouncedSearch)
+
+                // Fetch all data in parallel
+                const [productsRes, categoriesRes, manufacturersRes, productTypesRes] = await Promise.all([
+                    fetch(`/api/products?page=1&limit=5&search=${searchTerm}`),
+                    fetch(`/api/categories?limit=50`),
+                    fetch(`/api/manufacturers?page=1&limit=50`),
+                    fetch(`/api/productTypes`)
+                ])
+
+                const [productsData, categoriesData, manufacturersData, productTypesData] = await Promise.all([
+                    productsRes.json(),
+                    categoriesRes.json(),
+                    manufacturersRes.json(),
+                    productTypesRes.json()
+                ])
+
+                // Filter categories, manufacturers, and product types by search query
+                const query = debouncedSearch.toLowerCase()
+                const filteredCategories = (categoriesData.data || []).filter((cat: Category) =>
+                    cat.name.toLowerCase().includes(query)
+                ).slice(0, 3)
+
+                const filteredManufacturers = (manufacturersData.data || []).filter((mfr: Manufacturer) =>
+                    mfr.name.toLowerCase().includes(query)
+                ).slice(0, 3)
+
+                const filteredProductTypes = (productTypesData.data || []).filter((type: ProductType) =>
+                    type.name.toLowerCase().includes(query)
+                ).slice(0, 3)
+
+                setSearchResults({
+                    products: productsData.data || [],
+                    categories: filteredCategories,
+                    manufacturers: filteredManufacturers,
+                    productTypes: filteredProductTypes
+                })
             } catch (error) {
                 console.error('Search failed:', error)
-                setProducts([])
+                setSearchResults({
+                    products: [],
+                    categories: [],
+                    manufacturers: [],
+                    productTypes: []
+                })
             } finally {
                 setIsSearching(false)
             }
         }
 
-        searchProducts()
+        searchAll()
     }, [debouncedSearch])
 
     // Reset search when dialog closes
     React.useEffect(() => {
         if (!open) {
             setSearchQuery("")
-            setProducts([])
+            setSearchResults({
+                products: [],
+                categories: [],
+                manufacturers: [],
+                productTypes: []
+            })
         }
     }, [open])
 
@@ -96,6 +174,21 @@ export function SearchBar() {
     const handleProductSelect = (productId: number) => {
         setOpen(false)
         router.push(`/products/${productId}`)
+    }
+
+    const handleCategorySelect = (categoryId: number) => {
+        setOpen(false)
+        router.push(`/categories?categoryId=${categoryId}`)
+    }
+
+    const handleManufacturerSelect = (manufacturerId: number) => {
+        setOpen(false)
+        router.push(`/products?manufacturerId=${manufacturerId}`)
+    }
+
+    const handleProductTypeSelect = (productTypeId: number) => {
+        setOpen(false)
+        router.push(`/products?productTypeId=${productTypeId}`)
     }
 
     const handleViewAllResults = () => {
@@ -112,6 +205,11 @@ export function SearchBar() {
             handleViewAllResults()
         }
     }
+
+    const hasResults = searchResults.products.length > 0 ||
+        searchResults.categories.length > 0 ||
+        searchResults.manufacturers.length > 0 ||
+        searchResults.productTypes.length > 0
 
     return (
         <>
@@ -177,47 +275,112 @@ export function SearchBar() {
 
                             <CommandSeparator />
 
-                            {products.length === 0 ? (
+                            {!hasResults ? (
                                 <CommandEmpty>{t('noResults')}</CommandEmpty>
                             ) : (
-                                <CommandGroup heading={t('products')}>
-                                    {products.map((product) => (
-                                        <CommandItem
-                                            key={product.id}
-                                            value={product.name}
-                                            onSelect={() => handleProductSelect(product.id)}
-                                            className="cursor-pointer"
-                                        >
-                                            <div className="mr-2 h-8 w-8 relative flex-shrink-0 overflow-hidden rounded-md border bg-background">
-                                                {product.imageUrl ? (
-                                                    <Image
-                                                        src={product.imageUrl}
-                                                        alt={product.name}
-                                                        fill
-                                                        className="object-cover"
-                                                        sizes="32px"
-                                                    />
-                                                ) : (
-                                                    <div className="flex h-full w-full items-center justify-center bg-muted">
-                                                        <Package className="h-4 w-4 text-muted-foreground" />
+                                <>
+                                    {/* Categories */}
+                                    {searchResults.categories.length > 0 && (
+                                        <>
+                                            <CommandGroup heading="Categories">
+                                                {searchResults.categories.map((category) => (
+                                                    <CommandItem
+                                                        key={`category-${category.id}`}
+                                                        value={category.name}
+                                                        onSelect={() => handleCategorySelect(category.id)}
+                                                        className="cursor-pointer"
+                                                    >
+                                                        <Tag className="mr-2 h-4 w-4 text-blue-500" />
+                                                        <span>{category.name}</span>
+                                                    </CommandItem>
+                                                ))}
+                                            </CommandGroup>
+                                            <CommandSeparator />
+                                        </>
+                                    )}
+
+                                    {/* Manufacturers */}
+                                    {searchResults.manufacturers.length > 0 && (
+                                        <>
+                                            <CommandGroup heading="Manufacturers">
+                                                {searchResults.manufacturers.map((manufacturer) => (
+                                                    <CommandItem
+                                                        key={`manufacturer-${manufacturer.id}`}
+                                                        value={manufacturer.name}
+                                                        onSelect={() => handleManufacturerSelect(manufacturer.id)}
+                                                        className="cursor-pointer"
+                                                    >
+                                                        <Building2 className="mr-2 h-4 w-4 text-green-500" />
+                                                        <span>{manufacturer.name}</span>
+                                                    </CommandItem>
+                                                ))}
+                                            </CommandGroup>
+                                            <CommandSeparator />
+                                        </>
+                                    )}
+
+                                    {/* Product Types */}
+                                    {searchResults.productTypes.length > 0 && (
+                                        <>
+                                            <CommandGroup heading="Product Types">
+                                                {searchResults.productTypes.map((productType) => (
+                                                    <CommandItem
+                                                        key={`productType-${productType.id}`}
+                                                        value={productType.name}
+                                                        onSelect={() => handleProductTypeSelect(productType.id)}
+                                                        className="cursor-pointer"
+                                                    >
+                                                        <Layers className="mr-2 h-4 w-4 text-purple-500" />
+                                                        <span>{productType.name}</span>
+                                                    </CommandItem>
+                                                ))}
+                                            </CommandGroup>
+                                            <CommandSeparator />
+                                        </>
+                                    )}
+
+                                    {/* Products */}
+                                    {searchResults.products.length > 0 && (
+                                        <CommandGroup heading={t('products')}>
+                                            {searchResults.products.map((product) => (
+                                                <CommandItem
+                                                    key={product.id}
+                                                    value={product.name}
+                                                    onSelect={() => handleProductSelect(product.id)}
+                                                    className="cursor-pointer"
+                                                >
+                                                    <div className="mr-2 h-8 w-8 relative flex-shrink-0 overflow-hidden rounded-md border bg-background">
+                                                        {product.imageUrl ? (
+                                                            <Image
+                                                                src={product.imageUrl}
+                                                                alt={product.name}
+                                                                fill
+                                                                className="object-cover"
+                                                                sizes="32px"
+                                                            />
+                                                        ) : (
+                                                            <div className="flex h-full w-full items-center justify-center bg-muted">
+                                                                <Package className="h-4 w-4 text-muted-foreground" />
+                                                            </div>
+                                                        )}
                                                     </div>
-                                                )}
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <div className="font-medium truncate">{product.name}</div>
-                                                <div className="text-xs text-muted-foreground flex items-center gap-2">
-                                                    <span>${product.price}</span>
-                                                    {product.manufacturer && (
-                                                        <>
-                                                            <span>•</span>
-                                                            <span>{product.manufacturer.name}</span>
-                                                        </>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </CommandItem>
-                                    ))}
-                                </CommandGroup>
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className="font-medium truncate">{product.name}</div>
+                                                        <div className="text-xs text-muted-foreground flex items-center gap-2">
+                                                            <span>{tCommon('currency')} {product.price}</span>
+                                                            {product.manufacturer && (
+                                                                <>
+                                                                    <span>•</span>
+                                                                    <span>{product.manufacturer.name}</span>
+                                                                </>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </CommandItem>
+                                            ))}
+                                        </CommandGroup>
+                                    )}
+                                </>
                             )}
 
                             {/* Navigation still available during search */}

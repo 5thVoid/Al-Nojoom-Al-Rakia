@@ -34,6 +34,7 @@ interface CheckoutSummaryProps {
 
 export function CheckoutSummary({ cartData }: CheckoutSummaryProps) {
     const t = useTranslations('Checkout')
+    const tCommon = useTranslations('Common')
 
     if (!cartData) return null
 
@@ -75,7 +76,7 @@ export function CheckoutSummary({ cartData }: CheckoutSummaryProps) {
                                 </span>
                             </div>
                             <span className="font-medium flex items-center">
-                                SAR {(parseFloat(item.product.price) * item.quantity).toFixed(2)}
+                                {tCommon('currency')} {(parseFloat(item.product.price) * item.quantity).toFixed(2)}
                             </span>
                         </div>
                     ))}
@@ -86,7 +87,7 @@ export function CheckoutSummary({ cartData }: CheckoutSummaryProps) {
                 {/* Subtotal */}
                 <div className="flex justify-between text-sm">
                     <span>{t('summary.subtotal')}</span>
-                    <span>SAR {cartData.totals.subtotal.toFixed(2)}</span>
+                    <span>{tCommon('currency')} {cartData.totals.subtotal.toFixed(2)}</span>
                 </div>
 
                 {/* Shipping */}
@@ -98,7 +99,7 @@ export function CheckoutSummary({ cartData }: CheckoutSummaryProps) {
                 {/* Tax */}
                 <div className="flex justify-between text-sm">
                     <span>{t('summary.tax')} (15%)</span>
-                    <span>SAR {tax.toFixed(2)}</span>
+                    <span>{tCommon('currency')} {tax.toFixed(2)}</span>
                 </div>
 
                 <Separator />
@@ -106,7 +107,7 @@ export function CheckoutSummary({ cartData }: CheckoutSummaryProps) {
                 {/* Total */}
                 <div className="flex justify-between text-lg font-bold">
                     <span>{t('summary.total')}</span>
-                    <span>SAR {total.toFixed(2)}</span>
+                    <span>{tCommon('currency')} {total.toFixed(2)}</span>
                 </div>
             </CardContent>
         </Card>

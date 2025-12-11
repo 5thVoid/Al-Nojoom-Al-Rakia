@@ -103,6 +103,7 @@ export function ProductCard({
     variant = "default"
 }: ProductCardProps) {
     const t = useTranslations('Products')
+    const tCommon = useTranslations('Common')
     const tAdmin = useTranslations('Admin.Products')
     const { addToCart, isAdding } = useCart()
 
@@ -243,7 +244,7 @@ export function ProductCard({
                     <div className="space-y-1">
                         <div className="flex items-center gap-2">
                             <div className="font-bold text-lg text-primary">
-                                SAR {parseFloat(product.price).toFixed(2)}
+                                {tCommon('currency')} {parseFloat(product.price).toFixed(2)}
                             </div>
 
                             {/* Stock Status Badge */}
@@ -320,12 +321,12 @@ export function ProductCard({
         </>
     )
 
-    if (clickable) {
-        // Admin links to admin details, User links to shop details
-        const linkHref = isAdmin ? `/admin/products/${product.id}` : `/products/${product.id}`
-
+    // For admin mode, don't wrap in Link to avoid nested <a> tags
+    // The edit button has its own Link
+    if (clickable && !isAdmin) {
+        // User mode: card links to product details
         return (
-            <Link href={linkHref} className="block h-full">
+            <Link href={`/products/${product.id}`} className="block h-full">
                 <div className={productCardVariants({ variant, clickable, className })}>
                     {cardContent}
                 </div>
@@ -334,7 +335,7 @@ export function ProductCard({
     }
 
     return (
-        <div className={productCardVariants({ variant, clickable, className })}>
+        <div className={productCardVariants({ variant, clickable: isAdmin ? false : clickable, className })}>
             {cardContent}
         </div>
     )

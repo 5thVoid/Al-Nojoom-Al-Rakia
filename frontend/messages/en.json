@@ -1,4 +1,7 @@
 {
+    "Common": {
+        "currency": "SAR"
+    },
     "Navbar": {
         "home": "Home",
         "products": "Products",
@@ -86,6 +89,10 @@
         "signupFailure": "Signup failed",
         "loginSuccess": "Login successful",
         "loginFailure": "Login failed"
+    },
+    "JustArrived": {
+        "title": "Just Arrived",
+        "description": "Check out our newest products"
     },
     "Products": {
         "title": "Featured Products",

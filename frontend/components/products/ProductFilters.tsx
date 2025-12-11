@@ -75,6 +75,7 @@ export function ProductFilters({
     maxPrice = 5000,
 }: ProductFiltersProps) {
     const t = useTranslations('AllProducts')
+    const tCommon = useTranslations('Common')
 
     if (isLoading) {
         return (
@@ -151,8 +152,8 @@ export function ProductFilters({
                             className="w-full"
                         />
                         <div className="flex items-center justify-between text-sm text-muted-foreground">
-                            <span>SAR {priceRange[0]}</span>
-                            <span>SAR {priceRange[1]}</span>
+                            <span>{tCommon('currency')} {priceRange[0]}</span>
+                            <span>{tCommon('currency')} {priceRange[1]}</span>
                         </div>
                     </div>
 
