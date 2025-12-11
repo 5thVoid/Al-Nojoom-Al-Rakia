@@ -14,7 +14,18 @@ import {
     Manufacturer,
     ProductType
 } from "@/components/products/ProductFilters"
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/pagination"
 import { Filter, X } from "lucide-react"
+
+const PRODUCTS_PER_PAGE = 6
 
 interface AllProductsProps {
     /** Initial search query */
@@ -53,6 +64,7 @@ export function AllProducts({
     const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000])
     const [showFilters, setShowFilters] = useState(true)
     const [inStockOnly, setInStockOnly] = useState(false)
+    const [currentPage, setCurrentPage] = useState(1)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -73,7 +85,28 @@ export function AllProducts({
                 // Fetch products with filters
                 const productsRes = await fetch(`/api/products?${params.toString()}`);
                 const productsData = await productsRes.json();
-                setProducts(productsData.data || []);
+                const fetchedProducts = productsData.data || [];
+                setProducts(fetchedProducts);
+
+                // Dynamically set price range based on actual product prices
+                if (fetchedProducts.length > 0) {
+                    const prices = fetchedProducts.map((p: Product) => parseFloat(p.price));
+                    const minPrice = Math.floor(Math.min(...prices));
+                    const maxPrice = Math.ceil(Math.max(...prices));
+
+                    // Only update price range if it's at default values or if we need to expand it
+                    setPriceRange(prev => {
+                        // If current range is default or doesn't cover all products, update it
+                        if (prev[0] === 0 && prev[1] === 5000) {
+                            return [minPrice, maxPrice];
+                        }
+                        // Expand range if needed to include all products
+                        return [
+                            Math.min(prev[0], minPrice),
+                            Math.max(prev[1], maxPrice)
+                        ];
+                    });
+                }
 
                 // Only fetch filter options on initial load
                 if (manufacturers.length === 0) {
@@ -99,6 +132,8 @@ export function AllProducts({
         };
 
         fetchData();
+        // Reset to first page when filters change
+        setCurrentPage(1);
     }, [debouncedSearch, selectedCategory, selectedManufacturers, selectedProductTypes, inStockOnly]);
 
     const toggleManufacturer = (id: number) => {
@@ -117,9 +152,19 @@ export function AllProducts({
         setSelectedManufacturers([])
         setSelectedProductTypes([])
         setSelectedCategory(null)
-        setPriceRange([0, 5000])
         setInStockOnly(false)
         setSearchQuery('')
+        setCurrentPage(1)
+
+        // Reset price range to show all products
+        if (products.length > 0) {
+            const prices = products.map(p => parseFloat(p.price));
+            const minPrice = Math.floor(Math.min(...prices));
+            const maxPrice = Math.ceil(Math.max(...prices));
+            setPriceRange([minPrice, maxPrice]);
+        } else {
+            setPriceRange([0, 5000]);
+        }
     }
 
     // Client-side price range filtering only (other filters are server-side via API)
@@ -127,6 +172,51 @@ export function AllProducts({
         const price = parseFloat(product.price)
         return price >= priceRange[0] && price <= priceRange[1]
     })
+
+    // Pagination calculations
+    const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE)
+    const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE
+    const endIndex = startIndex + PRODUCTS_PER_PAGE
+    const paginatedProducts = filteredProducts.slice(startIndex, endIndex)
+
+    // Generate page numbers for pagination
+    const getPageNumbers = () => {
+        const pages: (number | string)[] = []
+        const maxPagesToShow = 5
+
+        if (totalPages <= maxPagesToShow) {
+            // Show all pages if total is less than max
+            for (let i = 1; i <= totalPages; i++) {
+                pages.push(i)
+            }
+        } else {
+            // Always show first page
+            pages.push(1)
+
+            if (currentPage > 3) {
+                pages.push('...')
+            }
+
+            // Show pages around current page
+            const start = Math.max(2, currentPage - 1)
+            const end = Math.min(totalPages - 1, currentPage + 1)
+
+            for (let i = start; i <= end; i++) {
+                pages.push(i)
+            }
+
+            if (currentPage < totalPages - 2) {
+                pages.push('...')
+            }
+
+            // Always show last page
+            if (totalPages > 1) {
+                pages.push(totalPages)
+            }
+        }
+
+        return pages
+    }
 
     if (isLoading) {
         return <AllProductsPageSkeleton />
@@ -261,6 +351,8 @@ export function AllProducts({
                     onInStockOnlyChange={setInStockOnly}
                     onClearFilters={clearFilters}
                     isVisible={showFilters}
+                    minPrice={products.length > 0 ? Math.floor(Math.min(...products.map(p => parseFloat(p.price)))) : 0}
+                    maxPrice={products.length > 0 ? Math.ceil(Math.max(...products.map(p => parseFloat(p.price)))) : 5000}
                 />
 
                 {/* Products Grid */}
@@ -270,7 +362,7 @@ export function AllProducts({
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {filteredProducts.map(product => (
+                        {paginatedProducts.map(product => (
                             <ProductCard
                                 key={product.id}
                                 product={product}
@@ -280,9 +372,52 @@ export function AllProducts({
                         ))}
                     </div>
 
-                    {filteredProducts.length === 0 && (
+                    {paginatedProducts.length === 0 && (
                         <div className="text-center py-12">
                             <p className="text-muted-foreground">{t('noProducts')}</p>
+                        </div>
+                    )}
+
+                    {/* Pagination */}
+                    {totalPages > 1 && (
+                        <div className="mt-8">
+                            <Pagination>
+                                <PaginationContent>
+                                    <PaginationItem>
+                                        <PaginationPrevious
+                                            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                            className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                                        />
+                                    </PaginationItem>
+
+                                    {getPageNumbers().map((page, index) => (
+                                        <PaginationItem key={index}>
+                                            {page === '...' ? (
+                                                <PaginationEllipsis />
+                                            ) : (
+                                                <PaginationLink
+                                                    onClick={() => setCurrentPage(page as number)}
+                                                    isActive={currentPage === page}
+                                                    className="cursor-pointer"
+                                                >
+                                                    {page}
+                                                </PaginationLink>
+                                            )}
+                                        </PaginationItem>
+                                    ))}
+
+                                    <PaginationItem>
+                                        <PaginationNext
+                                            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                                            className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                                        />
+                                    </PaginationItem>
+                                </PaginationContent>
+                            </Pagination>
+
+                            <div className="text-center mt-4 text-sm text-muted-foreground">
+                                {tPage('pageOf', { current: currentPage, total: totalPages })}
+                            </div>
                         </div>
                     )}
                 </div>

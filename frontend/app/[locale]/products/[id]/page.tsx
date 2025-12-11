@@ -177,7 +177,7 @@ export default function ProductPage() {
                 {/* Product Image Card */}
                 <Card className="overflow-hidden bg-background">
                     <CardContent className="p-0">
-                        <div className="relative aspect-square flex items-center justify-center bg-muted">
+                        <div className="relative aspect-square flex items-center justify-center">
                             {product.imageUrl ? (
                                 <Image
                                     src={product.imageUrl}
@@ -196,7 +196,7 @@ export default function ProductPage() {
 
                 {/* Product Details Card */}
                 <div className="space-y-6">
-                    <Card className="bg-card">
+                    <Card className="bg-background">
                         <CardHeader>
                             <div className="flex items-start justify-between gap-4">
                                 <div className="space-y-2">
@@ -256,7 +256,7 @@ export default function ProductPage() {
                     </Card>
 
                     {/* Additional Info Card */}
-                    <Card className="bg-card">
+                    <Card className="bg-background">
                         <CardHeader>
                             <CardTitle className="text-lg">{t('productInfo')}</CardTitle>
                         </CardHeader>

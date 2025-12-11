@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { ShoppingCart, Trash2, Plus, Minus } from "lucide-react"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import {
     Sheet,
@@ -24,6 +25,7 @@ interface CartItem {
         name: string
         sku: string
         price: string
+        imageUrl?: string
     }
     quantity: number
 }
@@ -205,15 +207,25 @@ export function Cart() {
                             <ul className="grid gap-6 py-4">
                                 {items.map((item) => (
                                     <li key={item.id} className="flex items-center gap-4">
-                                        <div className="relative h-20 w-20 overflow-hidden rounded-lg border bg-muted">
-                                            <div className="flex h-full w-full items-center justify-center bg-secondary text-secondary-foreground">
-                                                <ShoppingCart className="h-6 w-6 opacity-20" />
-                                            </div>
+                                        <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border bg-background">
+                                            {item.product.imageUrl ? (
+                                                <Image
+                                                    src={item.product.imageUrl}
+                                                    alt={item.product.name}
+                                                    fill
+                                                    className="object-contain p-2"
+                                                    sizes="80px"
+                                                />
+                                            ) : (
+                                                <div className="flex h-full w-full items-center justify-center bg-secondary text-secondary-foreground">
+                                                    <ShoppingCart className="h-6 w-6 opacity-20" />
+                                                </div>
+                                            )}
                                         </div>
                                         <div className="flex flex-1 flex-col gap-1">
                                             <span className="font-medium line-clamp-1">{item.product.name}</span>
                                             <span className="text-sm text-muted-foreground">
-                                                ${parseFloat(item.product.price).toFixed(2)}
+                                                SAR {parseFloat(item.product.price).toFixed(2)}
                                             </span>
                                             <div className="mt-2 flex items-center gap-2">
                                                 <Button
@@ -255,7 +267,7 @@ export function Cart() {
                             <div className="w-full space-y-4">
                                 <div className="flex items-center justify-between text-base font-medium">
                                     <span>{t('total')}</span>
-                                    <span>${total.toFixed(2)}</span>
+                                    <span>SAR {total.toFixed(2)}</span>
                                 </div>
                                 <div className="grid gap-2">
                                     <Button
