@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { Search, Home, ShoppingBag, User, LogIn, Package, Loader2, ArrowRight } from "lucide-react"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import {
     CommandDialog,
@@ -22,6 +23,7 @@ interface Product {
     price: string
     manufacturer?: { name: string }
     category?: { name: string }
+    imageUrl?: string | null
 }
 
 export function SearchBar() {
@@ -186,7 +188,21 @@ export function SearchBar() {
                                             onSelect={() => handleProductSelect(product.id)}
                                             className="cursor-pointer"
                                         >
-                                            <Package className="mr-2 h-4 w-4 flex-shrink-0" />
+                                            <div className="mr-2 h-8 w-8 relative flex-shrink-0 overflow-hidden rounded-md border bg-background">
+                                                {product.imageUrl ? (
+                                                    <Image
+                                                        src={product.imageUrl}
+                                                        alt={product.name}
+                                                        fill
+                                                        className="object-cover"
+                                                        sizes="32px"
+                                                    />
+                                                ) : (
+                                                    <div className="flex h-full w-full items-center justify-center bg-muted">
+                                                        <Package className="h-4 w-4 text-muted-foreground" />
+                                                    </div>
+                                                )}
+                                            </div>
                                             <div className="flex-1 min-w-0">
                                                 <div className="font-medium truncate">{product.name}</div>
                                                 <div className="text-xs text-muted-foreground flex items-center gap-2">
