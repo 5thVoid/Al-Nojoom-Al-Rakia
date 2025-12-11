@@ -26,6 +26,7 @@ class ProductDisplayView extends Model<
   declare salesCount30d: number;
   declare imageUrl: string | null;
   declare imagePublicId: string | null;
+  declare createdAt: Date | null;
 }
 
 ProductDisplayView.init(
@@ -45,6 +46,7 @@ ProductDisplayView.init(
     salesCount30d: { type: DataTypes.INTEGER, field: "sales_count_30d" },
     imageUrl: { type: DataTypes.STRING, field: "image_url" },
     imagePublicId: { type: DataTypes.STRING, field: "image_public_id" },
+    createdAt: { type: DataTypes.DATE, field: "created_at" },
   },
   {
     sequelize,

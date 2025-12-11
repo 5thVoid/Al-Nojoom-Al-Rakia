@@ -172,6 +172,7 @@ export class ProductService extends BaseService<Product> {
         "name",
         "sku",
         "price",
+        [sequelize.col("Product.created_at"), "createdAt"],
         "categoryId",
         "manufacturerId",
         "productTypeId",
