@@ -1,4 +1,7 @@
 {
+    "Common": {
+        "currency": "ريال"
+    },
     "Navbar": {
         "home": "الرئيسية",
         "products": "المنتجات",
@@ -86,6 +89,10 @@
         "signupFailure": "فشل التسجيل",
         "loginSuccess": "تسجيل الدخول ناجح",
         "loginFailure": "فشل تسجيل الدخول"
+    },
+    "JustArrived": {
+        "title": "وصل حديثًا",
+        "description": "اكتشف أحدث منتجاتنا"
     },
     "Products": {
         "title": "المنتجات المميزة",

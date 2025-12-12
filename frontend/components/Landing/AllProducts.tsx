@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/pagination"
 import { Filter, X } from "lucide-react"
 
-const PRODUCTS_PER_PAGE = 6
+const PRODUCTS_PER_PAGE = 8
 
 interface AllProductsProps {
     /** Initial search query */
@@ -36,13 +36,19 @@ interface AllProductsProps {
     title?: string
     /** Whether to show the title */
     showTitle?: boolean
+    /** Initial manufacturer ID filter */
+    initialManufacturerId?: number
+    /** Initial product type ID filter */
+    initialProductTypeId?: number
 }
 
 export function AllProducts({
     initialSearch = '',
     showSearch = false,
     title,
-    showTitle = true
+    showTitle = true,
+    initialManufacturerId,
+    initialProductTypeId
 }: AllProductsProps = {}) {
     const t = useTranslations('AllProducts')
     const tPage = useTranslations('ProductsPage')
@@ -57,9 +63,13 @@ export function AllProducts({
     const [searchQuery, setSearchQuery] = useState(initialSearch)
     const debouncedSearch = useDebounce(searchQuery, 300)
 
-    // Filter states
-    const [selectedManufacturers, setSelectedManufacturers] = useState<number[]>([])
-    const [selectedProductTypes, setSelectedProductTypes] = useState<number[]>([])
+    // Filter states - initialize with URL parameters if provided
+    const [selectedManufacturers, setSelectedManufacturers] = useState<number[]>(
+        initialManufacturerId ? [initialManufacturerId] : []
+    )
+    const [selectedProductTypes, setSelectedProductTypes] = useState<number[]>(
+        initialProductTypeId ? [initialProductTypeId] : []
+    )
     const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
     const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000])
     const [showFilters, setShowFilters] = useState(true)
@@ -223,7 +233,7 @@ export function AllProducts({
     }
 
     return (
-        <div className={`container max-w-screen-2xl py-8 px-4 md:px-8 lg:px-28`}>
+        <div className={`max-w-screen-3xl py-8 px-4 md:px-8 lg:px-28`}>
             {/* Header Section */}
             <div className="flex flex-col gap-6 mb-8">
                 <div className="flex items-center justify-between">
@@ -361,7 +371,7 @@ export function AllProducts({
                         {t('showing', { count: filteredProducts.length })}
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 lg:grid-cols-4`}>
                         {paginatedProducts.map(product => (
                             <ProductCard
                                 key={product.id}

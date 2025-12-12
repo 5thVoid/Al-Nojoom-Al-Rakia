@@ -61,9 +61,9 @@ export function FeaturedProducts() {
     }
 
     return (
-        <section className="bg-muted/10 px-28">
-            <div className="container max-w-screen-2xl">
-                <h2 className="text-3xl font-bold tracking-tight text-center my-12 text-foreground ml-3">
+        <section className="bg-muted/10">
+            <div className="max-w-screen-4xl lg:px-28">
+                <h2 className="text-3xl font-bold tracking-tight text-start my-12 text-foreground ml-3">
                     {t('title')}
                 </h2>
 
@@ -81,7 +81,7 @@ export function FeaturedProducts() {
                             slidesPerView: 2,
                         },
                         1280: {
-                            slidesPerView: 3,
+                            slidesPerView: 4,
                         },
                     }}
                     className="pb-12"
