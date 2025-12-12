@@ -53,6 +53,25 @@ Product.init(
       allowNull: true,
       field: "image_public_id",
     },
+    // Make relationships required (NOT NULL)
+    manufacturerId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: 'manufacturer_id',
+      references: { model: 'manufacturers', key: 'id' },
+    },
+    categoryId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: 'category_id',
+      references: { model: 'categories', key: 'id' },
+    },
+    productTypeId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: 'product_type_id',
+      references: { model: 'product_types', key: 'id' },
+    },
   },
   { sequelize, tableName: "products" }
 );
